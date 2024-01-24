@@ -1,18 +1,16 @@
 <!-- Plugin Configuration File. Read more: https://plugins.jetbrains.com/docs/intellij/plugin-configuration-file.html -->
 <idea-plugin>
     <id>com.github.cxz88.testplugindevkit</id>
-    <name>testPluginDevKit Template</name>
+    <name>TestPluginDevKit Template</name>
     <vendor>cxz88</vendor>
-
     <depends>com.intellij.modules.platform</depends>
-
     <resource-bundle>messages.MyBundle</resource-bundle>
+    <actions>
+        <action id="com.github.cxz88.testplugindevkit.tool.GAction"
+                class="com.github.cxz88.testplugindevkit.tool.GAction" text="生成代码"
+                description="点击将弹出生成代码窗口">
+            <add-to-group group-id="ToolsMenu" anchor="first"/>
+        </action>
+    </actions>
 
-    <extensions defaultExtensionNs="com.intellij">
-        <toolWindow factoryClass="com.github.cxz88.testplugindevkit.toolWindow.MyToolWindowFactory" id="MyToolWindow"/>
-    </extensions>
-
-    <applicationListeners>
-        <listener class="com.github.cxz88.testplugindevkit.listeners.MyApplicationActivationListener" topic="com.intellij.openapi.application.ApplicationActivationListener"/>
-    </applicationListeners>
 </idea-plugin>
