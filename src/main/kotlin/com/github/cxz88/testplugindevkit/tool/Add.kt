@@ -46,12 +46,13 @@ fun Add(project: Project?, toMain: () -> Unit = {}) {
     var tableName by remember { mutableStateOf("") }
     var menuName by remember { mutableStateOf("") }
     var inheritTenant by remember { mutableStateOf(true) }
+    var name by remember { mutableStateOf("") }
 
 
     Scaffold(
         topBar = {
             TopAppBar(title = {
-            }, backgroundColor = Color.Transparent, modifier = Modifier.height(18.dp), elevation = 0.dp)
+            }, backgroundColor = Color.Transparent, modifier = Modifier.height(30.dp), elevation = 0.dp)
         },
         bottomBar = {
             BottomAppBar(backgroundColor = Color.Transparent, elevation = 0.dp) {
@@ -82,7 +83,7 @@ fun Add(project: Project?, toMain: () -> Unit = {}) {
                         contentPadding = PaddingValues(vertical = 0.dp, horizontal = 6.dp),
                         border = BorderStroke(0.1.dp, color = Color(0x22AFB1B3))
                     ) {
-                        Text("添加", fontSize = 13.sp, textAlign = TextAlign.Center, color = Color(0xFFd9dbdf))
+                        Text("完成", fontSize = 13.sp, textAlign = TextAlign.Center, color = Color(0xFFd9dbdf))
                     }
                 }
             }
@@ -92,506 +93,574 @@ fun Add(project: Project?, toMain: () -> Unit = {}) {
         Column(
             verticalArrangement = Arrangement.Center,
             horizontalAlignment = Alignment.CenterHorizontally,
-            modifier = Modifier.fillMaxWidth()
+            modifier = Modifier.padding(it).fillMaxSize()
         ) {
-            Row(
-                horizontalArrangement = Arrangement.SpaceAround,
-                verticalAlignment = Alignment.CenterVertically,
-                modifier = Modifier.fillMaxWidth()
-            ) {
+            Column  (Modifier.clip(RoundedCornerShape(5.dp))
+                .border(0.1.dp, Color(0x22AFB1B3), RoundedCornerShape(5.dp))
+                .padding(10.dp)) {
                 Row(
                     horizontalArrangement = Arrangement.Center,
                     verticalAlignment = Alignment.CenterVertically,
-                    modifier = Modifier.weight(1F)
+                    modifier = Modifier.fillMaxWidth()
                 ) {
-                    Text(
-                        "选择service模块",
-                        fontSize = 13.sp,
-                        textAlign = TextAlign.Start,
-                        fontWeight = W500,
-                        modifier = Modifier.weight(1.3F)
-                    )
-                    Spacer(modifier = Modifier.weight(.1F))
-                    Select(project, true, modifier = Modifier.weight(2F))
-                }
-                Spacer(Modifier.weight(0.1F))
-                Row(
-                    horizontalArrangement = Arrangement.Center,
-                    verticalAlignment = Alignment.CenterVertically,
-                    modifier = Modifier.weight(1F)
-                ) {
-                    Text(
-                        "选择service-api模块",
-                        fontSize = 13.sp,
-                        textAlign = TextAlign.Start,
-                        fontWeight = W500,
-                        modifier = Modifier.weight(1.3F)
-                    )
-                    Spacer(modifier = Modifier.weight(.1F))
-                    Select(project, modifier = Modifier.weight(2F))
-                }
-            }
-
-            Row(
-                horizontalArrangement = Arrangement.SpaceAround,
-                verticalAlignment = Alignment.CenterVertically,
-                modifier = Modifier.fillMaxWidth().padding(top = 20.dp)
-            ) {
-                Row(
-                    horizontalArrangement = Arrangement.Center,
-                    verticalAlignment = Alignment.CenterVertically,
-                    modifier = Modifier.fillMaxWidth().weight(1F)
-                ) {
-                    Text(
-                        "后端包名",
-                        fontSize = 13.sp,
-                        textAlign = TextAlign.Start,
-                        fontWeight = W500,
-                        modifier = Modifier.weight(1.3F)
-                    )
-                    Spacer(modifier = Modifier.weight(.1F))
-
-                    //显示选中的文本
-                    BasicTextField(
-                        rearEndPackage,
-                        onValueChange = {
-                            rearEndPackage = it
-                        },
-                        readOnly = false,
-                        enabled = true,
-                        modifier = Modifier.weight(2F).height(28.dp).clip(RoundedCornerShape(5.dp))
-                            .background(Color(0xFF4C5052)).padding(horizontal = 10.dp)
-                            .hoverable(remember { MutableInteractionSource() }, true)
-                            .pointerHoverIcon(PointerIcon.Text),
-                        textStyle = TextStyle(
-                            color = Color(0xFFd9dbdf),
-                            fontSize = with(LocalDensity.current) {
-                                14.dp.toSp()
-                            },
-                            textAlign = TextAlign.Start,
-                        ), cursorBrush = SolidColor(Color.White), maxLines = 1, decorationBox = {
-                            Row(
-                                horizontalArrangement = Arrangement.Start,
-                                verticalAlignment = Alignment.CenterVertically,
-                                modifier = Modifier.fillMaxSize()
-                            ) {
-                                it()
-                            }
-                        }
-                    )
-
-
-                }
-                Spacer(modifier = Modifier.weight(0.1F))
-                Row(
-                    horizontalArrangement = Arrangement.Center,
-                    verticalAlignment = Alignment.CenterVertically,
-                    modifier = Modifier.fillMaxWidth().weight(1F)
-                ) {
-                    Text(
-                        "前端目录",
-                        fontSize = 13.sp,
-                        textAlign = TextAlign.Start,
-                        fontWeight = W500,
-                        modifier = Modifier.weight(1.3F)
-                    )
-                    Spacer(modifier = Modifier.weight(0.1F))
-                    BasicTextField(
-
-                        frontEndPackage,
-                        onValueChange = {
-                            frontEndPackage = it
-                        },
-                        readOnly = false,
-                        enabled = true,
-                        modifier = Modifier.weight(2F).height(28.dp).clip(RoundedCornerShape(5.dp))
-                            .background(Color(0xFF4C5052)).padding(horizontal = 10.dp)
-                            .hoverable(remember { MutableInteractionSource() }, true)
-                            .pointerHoverIcon(PointerIcon.Text),
-                        textStyle = TextStyle(
-                            color = Color(0xFFd9dbdf),
-                            fontSize = with(LocalDensity.current) {
-                                14.dp.toSp()
-                            },
-                            textAlign = TextAlign.Start,
-                        ), cursorBrush = SolidColor(Color.White), maxLines = 1, decorationBox = {
-                            Row(
-                                horizontalArrangement = Arrangement.Start,
-                                verticalAlignment = Alignment.CenterVertically,
-                                modifier = Modifier.fillMaxSize()
-                            ) {
-                                it()
-                            }
-                        }
-                    )
-                }
-            }
-            Row(
-                horizontalArrangement = Arrangement.SpaceAround,
-                verticalAlignment = Alignment.CenterVertically,
-                modifier = Modifier.fillMaxWidth().padding(top = 20.dp)
-            ) {
-                Row(
-                    horizontalArrangement = Arrangement.Center,
-                    verticalAlignment = Alignment.CenterVertically,
-                    modifier = Modifier.fillMaxWidth().weight(1F)
-                ) {
-                    Text(
-                        "数据库连接地址",
-                        fontSize = 13.sp,
-                        textAlign = TextAlign.Start,
-                        fontWeight = W500,
-                        modifier = Modifier.weight(1.3F)
-                    )
-                    Spacer(modifier = Modifier.weight(.1F))
-
-                    //显示选中的文本
-                    BasicTextField(
-                        url,
-                        onValueChange = {
-                            url = it
-                        },
-                        readOnly = false,
-                        enabled = true,
-                        modifier = Modifier.weight(2F).height(28.dp).clip(RoundedCornerShape(5.dp))
-                            .background(Color(0xFF4C5052)).padding(horizontal = 10.dp)
-                            .hoverable(remember { MutableInteractionSource() }, true)
-                            .pointerHoverIcon(PointerIcon.Text),
-                        textStyle = TextStyle(
-                            color = Color(0xFFd9dbdf),
-                            fontSize = with(LocalDensity.current) {
-                                14.dp.toSp()
-                            },
-                            textAlign = TextAlign.Start,
-                        ), cursorBrush = SolidColor(Color.White), maxLines = 1, decorationBox = {
-                            Row(
-                                horizontalArrangement = Arrangement.Start,
-                                verticalAlignment = Alignment.CenterVertically,
-                                modifier = Modifier.fillMaxSize()
-                            ) {
-                                it()
-                            }
-                        }
-                    )
-
-
-                }
-                Spacer(modifier = Modifier.weight(0.1F))
-                Row(
-                    horizontalArrangement = Arrangement.Center,
-                    verticalAlignment = Alignment.CenterVertically,
-                    modifier = Modifier.fillMaxWidth().weight(1F)
-                ) {
-                    Text(
-                        "端口",
-                        fontSize = 13.sp,
-                        textAlign = TextAlign.Start,
-                        fontWeight = W500,
-                        modifier = Modifier.weight(1.3F)
-                    )
-                    Spacer(modifier = Modifier.weight(0.1F))
-                    BasicTextField(
-
-                        port,
-                        onValueChange = {
-                            port = it
-                        },
-                        readOnly = false,
-                        enabled = true,
-                        modifier = Modifier.weight(2F).height(28.dp).clip(RoundedCornerShape(5.dp))
-                            .background(Color(0xFF4C5052)).padding(horizontal = 10.dp)
-                            .hoverable(remember { MutableInteractionSource() }, true)
-                            .pointerHoverIcon(PointerIcon.Text),
-                        textStyle = TextStyle(
-                            color = Color(0xFFd9dbdf),
-                            fontSize = with(LocalDensity.current) {
-                                14.dp.toSp()
-                            },
-                            textAlign = TextAlign.Start,
-                        ), cursorBrush = SolidColor(Color.White), maxLines = 1, decorationBox = {
-                            Row(
-                                horizontalArrangement = Arrangement.Start,
-                                verticalAlignment = Alignment.CenterVertically,
-                                modifier = Modifier.fillMaxSize()
-                            ) {
-                                it()
-                            }
-                        }
-                    )
-                }
-            }
-            Row(
-                horizontalArrangement = Arrangement.SpaceAround,
-                verticalAlignment = Alignment.CenterVertically,
-                modifier = Modifier.fillMaxWidth().padding(top = 20.dp)
-            ) {
-                Row(
-                    horizontalArrangement = Arrangement.Center,
-                    verticalAlignment = Alignment.CenterVertically,
-                    modifier = Modifier.fillMaxWidth().weight(1F)
-                ) {
-                    Text(
-                        "用户名",
-                        fontSize = 13.sp,
-                        textAlign = TextAlign.Start,
-                        fontWeight = W500,
-                        modifier = Modifier.weight(1.3F)
-                    )
-                    Spacer(modifier = Modifier.weight(.1F))
-
-                    //显示选中的文本
-                    BasicTextField(
-                        userName,
-                        onValueChange = {
-                            userName = it
-                        },
-                        readOnly = false,
-                        enabled = true,
-                        modifier = Modifier.weight(2F).height(28.dp).clip(RoundedCornerShape(5.dp))
-                            .background(Color(0xFF4C5052)).padding(horizontal = 10.dp)
-                            .hoverable(remember { MutableInteractionSource() }, true)
-                            .pointerHoverIcon(PointerIcon.Text),
-                        textStyle = TextStyle(
-                            color = Color(0xFFd9dbdf),
-                            fontSize = with(LocalDensity.current) {
-                                14.dp.toSp()
-                            },
-                            textAlign = TextAlign.Start,
-                        ), cursorBrush = SolidColor(Color.White), maxLines = 1, decorationBox = {
-                            Row(
-                                horizontalArrangement = Arrangement.Start,
-                                verticalAlignment = Alignment.CenterVertically,
-                                modifier = Modifier.fillMaxSize()
-                            ) {
-                                it()
-                            }
-                        }
-                    )
-
-
-                }
-                Spacer(modifier = Modifier.weight(0.1F))
-                Row(
-                    horizontalArrangement = Arrangement.Center,
-                    verticalAlignment = Alignment.CenterVertically,
-                    modifier = Modifier.fillMaxWidth().weight(1F)
-                ) {
-                    Text(
-                        "密码",
-                        fontSize = 13.sp,
-                        textAlign = TextAlign.Start,
-                        fontWeight = W500,
-                        modifier = Modifier.weight(1.3F)
-                    )
-                    Spacer(modifier = Modifier.weight(0.1F))
-                    BasicTextField(
-                        passWord,
-                        onValueChange = {
-                            passWord = it
-                        },
-                        readOnly = false,
-                        enabled = true,
-                        modifier = Modifier.weight(2F).height(28.dp).clip(RoundedCornerShape(5.dp))
-                            .background(Color(0xFF4C5052)).padding(horizontal = 10.dp)
-                            .hoverable(remember { MutableInteractionSource() }, true)
-                            .pointerHoverIcon(PointerIcon.Text),
-                        textStyle = TextStyle(
-                            color = Color(0xFFd9dbdf),
-                            fontSize = with(LocalDensity.current) {
-                                14.dp.toSp()
-                            },
-                            textAlign = TextAlign.Start,
-                        ), cursorBrush = SolidColor(Color.White),
-
-                        maxLines = 1, decorationBox = {
-                            Row(
-                                horizontalArrangement = Arrangement.Start,
-                                verticalAlignment = Alignment.CenterVertically,
-                                modifier = Modifier.fillMaxSize()
-                            ) {
-                                it()
-                            }
-                        }
-                    )
-                }
-            }
-            Row(
-                horizontalArrangement = Arrangement.SpaceAround,
-                verticalAlignment = Alignment.CenterVertically,
-                modifier = Modifier.fillMaxWidth().padding(top = 20.dp)
-            ) {
-                Row(
-                    horizontalArrangement = Arrangement.Center,
-                    verticalAlignment = Alignment.CenterVertically,
-                    modifier = Modifier.fillMaxWidth().weight(1F)
-                ) {
-                    Text(
-                        "数据库名称",
-                        fontSize = 13.sp,
-                        textAlign = TextAlign.Start,
-                        fontWeight = W500,
-                        modifier = Modifier.weight(1.3F)
-                    )
-                    Spacer(modifier = Modifier.weight(.1F))
-
-                    //显示选中的文本
-                    BasicTextField(
-                        dataBaseName,
-                        onValueChange = {
-                            dataBaseName = it
-                        },
-                        readOnly = false,
-                        enabled = true,
-                        modifier = Modifier.weight(2F).height(28.dp).clip(RoundedCornerShape(5.dp))
-                            .background(Color(0xFF4C5052)).padding(horizontal = 10.dp)
-                            .hoverable(remember { MutableInteractionSource() }, true)
-                            .pointerHoverIcon(PointerIcon.Text),
-                        textStyle = TextStyle(
-                            color = Color(0xFFd9dbdf),
-                            fontSize = with(LocalDensity.current) {
-                                14.dp.toSp()
-                            },
-                            textAlign = TextAlign.Start,
-                        ), cursorBrush = SolidColor(Color.White), maxLines = 1, decorationBox = {
-                            Row(
-                                horizontalArrangement = Arrangement.Start,
-                                verticalAlignment = Alignment.CenterVertically,
-                                modifier = Modifier.fillMaxSize()
-                            ) {
-                                it()
-                            }
-                        }
-                    )
-
-
-                }
-                Spacer(modifier = Modifier.weight(0.1F))
-                Row(
-                    horizontalArrangement = Arrangement.Center,
-                    verticalAlignment = Alignment.CenterVertically,
-                    modifier = Modifier.fillMaxWidth().weight(1F)
-                ) {
-                    Text(
-                        "表名",
-                        fontSize = 13.sp,
-                        textAlign = TextAlign.Start,
-                        fontWeight = W500,
-                        modifier = Modifier.weight(1.3F)
-                    )
-                    Spacer(modifier = Modifier.weight(0.1F))
-                    BasicTextField(
-                        tableName,
-                        onValueChange = {
-                            tableName = it
-                        },
-                        readOnly = false,
-                        enabled = true,
-                        modifier = Modifier.weight(2F).height(28.dp).clip(RoundedCornerShape(5.dp))
-                            .background(Color(0xFF4C5052)).padding(horizontal = 10.dp)
-                            .hoverable(remember { MutableInteractionSource() }, true)
-                            .pointerHoverIcon(PointerIcon.Text),
-                        textStyle = TextStyle(
-                            color = Color(0xFFd9dbdf),
-                            fontSize = with(LocalDensity.current) {
-                                14.dp.toSp()
-                            },
-                            textAlign = TextAlign.Start,
-                        ), cursorBrush = SolidColor(Color.White),
-
-                        maxLines = 1, decorationBox = {
-                            Row(
-                                horizontalArrangement = Arrangement.Start,
-                                verticalAlignment = Alignment.CenterVertically,
-                                modifier = Modifier.fillMaxSize()
-                            ) {
-                                it()
-                            }
-                        }
-                    )
-                }
-
-            }
-            Row(
-                horizontalArrangement = Arrangement.SpaceAround,
-                verticalAlignment = Alignment.CenterVertically,
-                modifier = Modifier.fillMaxWidth().padding(top = 20.dp)
-            ) {
-                Row(
-                    horizontalArrangement = Arrangement.Center,
-                    verticalAlignment = Alignment.CenterVertically,
-                    modifier = Modifier.fillMaxWidth().weight(1F)
-                ) {
-                    Text(
-                        "菜单名称",
-                        fontSize = 13.sp,
-                        textAlign = TextAlign.Start,
-                        fontWeight = W500,
-                        modifier = Modifier.weight(1.3F)
-                    )
-                    Spacer(modifier = Modifier.weight(.1F))
-
-                    //显示选中的文本
-                    BasicTextField(
-                        menuName,
-                        onValueChange = {
-                            menuName = it
-                        },
-                        readOnly = false,
-                        enabled = true,
-                        modifier = Modifier.weight(2F).height(28.dp).clip(RoundedCornerShape(5.dp))
-                            .background(Color(0xFF4C5052)).padding(horizontal = 10.dp)
-                            .hoverable(remember { MutableInteractionSource() }, true)
-                            .pointerHoverIcon(PointerIcon.Text),
-                        textStyle = TextStyle(
-                            color = Color(0xFFd9dbdf),
-                            fontSize = with(LocalDensity.current) {
-                                14.dp.toSp()
-                            },
-                            textAlign = TextAlign.Start,
-                        ), cursorBrush = SolidColor(Color.White), maxLines = 1, decorationBox = {
-                            Row(
-                                horizontalArrangement = Arrangement.Start,
-                                verticalAlignment = Alignment.CenterVertically,
-                                modifier = Modifier.fillMaxSize()
-                            ) {
-                                it()
-                            }
-                        }
-                    )
-
-
-                }
-                Spacer(modifier = Modifier.weight(0.1F))
-                Row(
-                    horizontalArrangement = Arrangement.Center,
-                    verticalAlignment = Alignment.CenterVertically,
-                    modifier = Modifier.fillMaxWidth().weight(1F)
-                ) {
-                    Text(
-                        "需要继承租户实体类",
-                        fontSize = 13.sp,
-                        textAlign = TextAlign.Start,
-                        fontWeight = W500,
-                        modifier = Modifier.weight(1.3F)
-                    )
-                    Spacer(modifier = Modifier.weight(0.1F))
                     Row(
-                        modifier = Modifier.weight(2F),
-                        horizontalArrangement = Arrangement.Start,
-                        verticalAlignment = Alignment.CenterVertically
+                        horizontalArrangement = Arrangement.Center,
+                        verticalAlignment = Alignment.CenterVertically,
+                        modifier = Modifier.fillMaxWidth(0.35F)
                     ) {
+                        Text(
+                            "别名",
+                            fontSize = 13.sp,
+                            textAlign = TextAlign.Start,
+                            fontWeight = W500,
+                            modifier = Modifier.weight(0.4F)
+                        )
+                        Spacer(modifier = Modifier.weight(.1F))
 
-                        CompositionLocalProvider(
-                            LocalIndication provides NoIndication
-                        ) {
-                            Switch(checked = inheritTenant, onCheckedChange = {
-                                inheritTenant = it
-                            },modifier = Modifier.fillMaxWidth(0.3F), colors = SwitchDefaults.colors(checkedThumbColor = Color(0xFF3374f0)))
-                        }
+                        //显示选中的文本
+                        BasicTextField(
+                            name,
+                            onValueChange = {
+                                name = it
+                            },
+                            readOnly = false,
+                            enabled = true,
+                            modifier = Modifier.weight(2F).height(28.dp).clip(RoundedCornerShape(5.dp))
+                                .background(Color(0xFF4C5052)).padding(horizontal = 10.dp)
+                                .hoverable(remember { MutableInteractionSource() }, true)
+                                .pointerHoverIcon(PointerIcon.Text),
+                            textStyle = TextStyle(
+                                color = Color(0xFFd9dbdf),
+                                fontSize = with(LocalDensity.current) {
+                                    14.dp.toSp()
+                                },
+                                textAlign = TextAlign.Start,
+                            ), cursorBrush = SolidColor(Color.White), maxLines = 1, decorationBox = {
+                                Row(
+                                    horizontalArrangement = Arrangement.Start,
+                                    verticalAlignment = Alignment.CenterVertically,
+                                    modifier = Modifier.fillMaxSize()
+                                ) {
+                                    it()
+                                }
+                            }
+                        )
 
+
+                    }
+
+                }
+            }
+
+            Column(
+                modifier = Modifier.fillMaxSize().padding(top = 15.dp).clip(RoundedCornerShape(5.dp))
+                    .border(0.1.dp, Color(0x22AFB1B3), RoundedCornerShape(5.dp))
+                    .padding(10.dp)
+            ) {
+                Row(
+                    horizontalArrangement = Arrangement.SpaceAround,
+                    verticalAlignment = Alignment.CenterVertically,
+                    modifier = Modifier.fillMaxWidth().padding(top = 15.dp)
+                ) {
+                    Row(
+                        horizontalArrangement = Arrangement.Center,
+                        verticalAlignment = Alignment.CenterVertically,
+                        modifier = Modifier.weight(1F)
+                    ) {
+                        Text(
+                            "选择service模块",
+                            fontSize = 13.sp,
+                            textAlign = TextAlign.Start,
+                            fontWeight = W500,
+                            modifier = Modifier.weight(1.3F)
+                        )
+                        Spacer(modifier = Modifier.weight(.1F))
+                        Select(project, true, modifier = Modifier.weight(2F))
+                    }
+                    Spacer(Modifier.weight(0.1F))
+                    Row(
+                        horizontalArrangement = Arrangement.Center,
+                        verticalAlignment = Alignment.CenterVertically,
+                        modifier = Modifier.weight(1F)
+                    ) {
+                        Text(
+                            "选择service-api模块",
+                            fontSize = 13.sp,
+                            textAlign = TextAlign.Start,
+                            fontWeight = W500,
+                            modifier = Modifier.weight(1.3F)
+                        )
+                        Spacer(modifier = Modifier.weight(.1F))
+                        Select(project, modifier = Modifier.weight(2F))
                     }
                 }
 
+                Row(
+                    horizontalArrangement = Arrangement.SpaceAround,
+                    verticalAlignment = Alignment.CenterVertically,
+                    modifier = Modifier.fillMaxWidth().padding(top = 20.dp)
+                ) {
+                    Row(
+                        horizontalArrangement = Arrangement.Center,
+                        verticalAlignment = Alignment.CenterVertically,
+                        modifier = Modifier.fillMaxWidth().weight(1F)
+                    ) {
+                        Text(
+                            "后端包名",
+                            fontSize = 13.sp,
+                            textAlign = TextAlign.Start,
+                            fontWeight = W500,
+                            modifier = Modifier.weight(1.3F)
+                        )
+                        Spacer(modifier = Modifier.weight(.1F))
+
+                        //显示选中的文本
+                        BasicTextField(
+                            rearEndPackage,
+                            onValueChange = {
+                                rearEndPackage = it
+                            },
+                            readOnly = false,
+                            enabled = true,
+                            modifier = Modifier.weight(2F).height(28.dp).clip(RoundedCornerShape(5.dp))
+                                .background(Color(0xFF4C5052)).padding(horizontal = 10.dp)
+                                .hoverable(remember { MutableInteractionSource() }, true)
+                                .pointerHoverIcon(PointerIcon.Text),
+                            textStyle = TextStyle(
+                                color = Color(0xFFd9dbdf),
+                                fontSize = with(LocalDensity.current) {
+                                    14.dp.toSp()
+                                },
+                                textAlign = TextAlign.Start,
+                            ), cursorBrush = SolidColor(Color.White), maxLines = 1, decorationBox = {
+                                Row(
+                                    horizontalArrangement = Arrangement.Start,
+                                    verticalAlignment = Alignment.CenterVertically,
+                                    modifier = Modifier.fillMaxSize()
+                                ) {
+                                    it()
+                                }
+                            }
+                        )
+
+
+                    }
+                    Spacer(modifier = Modifier.weight(0.1F))
+                    Row(
+                        horizontalArrangement = Arrangement.Center,
+                        verticalAlignment = Alignment.CenterVertically,
+                        modifier = Modifier.fillMaxWidth().weight(1F)
+                    ) {
+                        Text(
+                            "前端目录",
+                            fontSize = 13.sp,
+                            textAlign = TextAlign.Start,
+                            fontWeight = W500,
+                            modifier = Modifier.weight(1.3F)
+                        )
+                        Spacer(modifier = Modifier.weight(0.1F))
+                        BasicTextField(
+
+                            frontEndPackage,
+                            onValueChange = {
+                                frontEndPackage = it
+                            },
+                            readOnly = false,
+                            enabled = true,
+                            modifier = Modifier.weight(2F).height(28.dp).clip(RoundedCornerShape(5.dp))
+                                .background(Color(0xFF4C5052)).padding(horizontal = 10.dp)
+                                .hoverable(remember { MutableInteractionSource() }, true)
+                                .pointerHoverIcon(PointerIcon.Text),
+                            textStyle = TextStyle(
+                                color = Color(0xFFd9dbdf),
+                                fontSize = with(LocalDensity.current) {
+                                    14.dp.toSp()
+                                },
+                                textAlign = TextAlign.Start,
+                            ), cursorBrush = SolidColor(Color.White), maxLines = 1, decorationBox = {
+                                Row(
+                                    horizontalArrangement = Arrangement.Start,
+                                    verticalAlignment = Alignment.CenterVertically,
+                                    modifier = Modifier.fillMaxSize()
+                                ) {
+                                    it()
+                                }
+                            }
+                        )
+                    }
+                }
+                Row(
+                    horizontalArrangement = Arrangement.SpaceAround,
+                    verticalAlignment = Alignment.CenterVertically,
+                    modifier = Modifier.fillMaxWidth().padding(top = 20.dp)
+                ) {
+                    Row(
+                        horizontalArrangement = Arrangement.Center,
+                        verticalAlignment = Alignment.CenterVertically,
+                        modifier = Modifier.fillMaxWidth().weight(1F)
+                    ) {
+                        Text(
+                            "数据库连接地址",
+                            fontSize = 13.sp,
+                            textAlign = TextAlign.Start,
+                            fontWeight = W500,
+                            modifier = Modifier.weight(1.3F)
+                        )
+                        Spacer(modifier = Modifier.weight(.1F))
+
+                        //显示选中的文本
+                        BasicTextField(
+                            url,
+                            onValueChange = {
+                                url = it
+                            },
+                            readOnly = false,
+                            enabled = true,
+                            modifier = Modifier.weight(2F).height(28.dp).clip(RoundedCornerShape(5.dp))
+                                .background(Color(0xFF4C5052)).padding(horizontal = 10.dp)
+                                .hoverable(remember { MutableInteractionSource() }, true)
+                                .pointerHoverIcon(PointerIcon.Text),
+                            textStyle = TextStyle(
+                                color = Color(0xFFd9dbdf),
+                                fontSize = with(LocalDensity.current) {
+                                    14.dp.toSp()
+                                },
+                                textAlign = TextAlign.Start,
+                            ), cursorBrush = SolidColor(Color.White), maxLines = 1, decorationBox = {
+                                Row(
+                                    horizontalArrangement = Arrangement.Start,
+                                    verticalAlignment = Alignment.CenterVertically,
+                                    modifier = Modifier.fillMaxSize()
+                                ) {
+                                    it()
+                                }
+                            }
+                        )
+
+
+                    }
+                    Spacer(modifier = Modifier.weight(0.1F))
+                    Row(
+                        horizontalArrangement = Arrangement.Center,
+                        verticalAlignment = Alignment.CenterVertically,
+                        modifier = Modifier.fillMaxWidth().weight(1F)
+                    ) {
+                        Text(
+                            "端口",
+                            fontSize = 13.sp,
+                            textAlign = TextAlign.Start,
+                            fontWeight = W500,
+                            modifier = Modifier.weight(1.3F)
+                        )
+                        Spacer(modifier = Modifier.weight(0.1F))
+                        BasicTextField(
+
+                            port,
+                            onValueChange = {
+                                port = it
+                            },
+                            readOnly = false,
+                            enabled = true,
+                            modifier = Modifier.weight(2F).height(28.dp).clip(RoundedCornerShape(5.dp))
+                                .background(Color(0xFF4C5052)).padding(horizontal = 10.dp)
+                                .hoverable(remember { MutableInteractionSource() }, true)
+                                .pointerHoverIcon(PointerIcon.Text),
+                            textStyle = TextStyle(
+                                color = Color(0xFFd9dbdf),
+                                fontSize = with(LocalDensity.current) {
+                                    14.dp.toSp()
+                                },
+                                textAlign = TextAlign.Start,
+                            ), cursorBrush = SolidColor(Color.White), maxLines = 1, decorationBox = {
+                                Row(
+                                    horizontalArrangement = Arrangement.Start,
+                                    verticalAlignment = Alignment.CenterVertically,
+                                    modifier = Modifier.fillMaxSize()
+                                ) {
+                                    it()
+                                }
+                            }
+                        )
+                    }
+                }
+                Row(
+                    horizontalArrangement = Arrangement.SpaceAround,
+                    verticalAlignment = Alignment.CenterVertically,
+                    modifier = Modifier.fillMaxWidth().padding(top = 20.dp)
+                ) {
+                    Row(
+                        horizontalArrangement = Arrangement.Center,
+                        verticalAlignment = Alignment.CenterVertically,
+                        modifier = Modifier.fillMaxWidth().weight(1F)
+                    ) {
+                        Text(
+                            "用户名",
+                            fontSize = 13.sp,
+                            textAlign = TextAlign.Start,
+                            fontWeight = W500,
+                            modifier = Modifier.weight(1.3F)
+                        )
+                        Spacer(modifier = Modifier.weight(.1F))
+
+                        //显示选中的文本
+                        BasicTextField(
+                            userName,
+                            onValueChange = {
+                                userName = it
+                            },
+                            readOnly = false,
+                            enabled = true,
+                            modifier = Modifier.weight(2F).height(28.dp).clip(RoundedCornerShape(5.dp))
+                                .background(Color(0xFF4C5052)).padding(horizontal = 10.dp)
+                                .hoverable(remember { MutableInteractionSource() }, true)
+                                .pointerHoverIcon(PointerIcon.Text),
+                            textStyle = TextStyle(
+                                color = Color(0xFFd9dbdf),
+                                fontSize = with(LocalDensity.current) {
+                                    14.dp.toSp()
+                                },
+                                textAlign = TextAlign.Start,
+                            ), cursorBrush = SolidColor(Color.White), maxLines = 1, decorationBox = {
+                                Row(
+                                    horizontalArrangement = Arrangement.Start,
+                                    verticalAlignment = Alignment.CenterVertically,
+                                    modifier = Modifier.fillMaxSize()
+                                ) {
+                                    it()
+                                }
+                            }
+                        )
+
+
+                    }
+                    Spacer(modifier = Modifier.weight(0.1F))
+                    Row(
+                        horizontalArrangement = Arrangement.Center,
+                        verticalAlignment = Alignment.CenterVertically,
+                        modifier = Modifier.fillMaxWidth().weight(1F)
+                    ) {
+                        Text(
+                            "密码",
+                            fontSize = 13.sp,
+                            textAlign = TextAlign.Start,
+                            fontWeight = W500,
+                            modifier = Modifier.weight(1.3F)
+                        )
+                        Spacer(modifier = Modifier.weight(0.1F))
+                        BasicTextField(
+                            passWord,
+                            onValueChange = {
+                                passWord = it
+                            },
+                            readOnly = false,
+                            enabled = true,
+                            modifier = Modifier.weight(2F).height(28.dp).clip(RoundedCornerShape(5.dp))
+                                .background(Color(0xFF4C5052)).padding(horizontal = 10.dp)
+                                .hoverable(remember { MutableInteractionSource() }, true)
+                                .pointerHoverIcon(PointerIcon.Text),
+                            textStyle = TextStyle(
+                                color = Color(0xFFd9dbdf),
+                                fontSize = with(LocalDensity.current) {
+                                    14.dp.toSp()
+                                },
+                                textAlign = TextAlign.Start,
+                            ), cursorBrush = SolidColor(Color.White),
+
+                            maxLines = 1, decorationBox = {
+                                Row(
+                                    horizontalArrangement = Arrangement.Start,
+                                    verticalAlignment = Alignment.CenterVertically,
+                                    modifier = Modifier.fillMaxSize()
+                                ) {
+                                    it()
+                                }
+                            }
+                        )
+                    }
+                }
+                Row(
+                    horizontalArrangement = Arrangement.SpaceAround,
+                    verticalAlignment = Alignment.CenterVertically,
+                    modifier = Modifier.fillMaxWidth().padding(top = 20.dp)
+                ) {
+                    Row(
+                        horizontalArrangement = Arrangement.Center,
+                        verticalAlignment = Alignment.CenterVertically,
+                        modifier = Modifier.fillMaxWidth().weight(1F)
+                    ) {
+                        Text(
+                            "数据库名称",
+                            fontSize = 13.sp,
+                            textAlign = TextAlign.Start,
+                            fontWeight = W500,
+                            modifier = Modifier.weight(1.3F)
+                        )
+                        Spacer(modifier = Modifier.weight(.1F))
+
+                        //显示选中的文本
+                        BasicTextField(
+                            dataBaseName,
+                            onValueChange = {
+                                dataBaseName = it
+                            },
+                            readOnly = false,
+                            enabled = true,
+                            modifier = Modifier.weight(2F).height(28.dp).clip(RoundedCornerShape(5.dp))
+                                .background(Color(0xFF4C5052)).padding(horizontal = 10.dp)
+                                .hoverable(remember { MutableInteractionSource() }, true)
+                                .pointerHoverIcon(PointerIcon.Text),
+                            textStyle = TextStyle(
+                                color = Color(0xFFd9dbdf),
+                                fontSize = with(LocalDensity.current) {
+                                    14.dp.toSp()
+                                },
+                                textAlign = TextAlign.Start,
+                            ), cursorBrush = SolidColor(Color.White), maxLines = 1, decorationBox = {
+                                Row(
+                                    horizontalArrangement = Arrangement.Start,
+                                    verticalAlignment = Alignment.CenterVertically,
+                                    modifier = Modifier.fillMaxSize()
+                                ) {
+                                    it()
+                                }
+                            }
+                        )
+
+
+                    }
+                    Spacer(modifier = Modifier.weight(0.1F))
+                    Row(
+                        horizontalArrangement = Arrangement.Center,
+                        verticalAlignment = Alignment.CenterVertically,
+                        modifier = Modifier.fillMaxWidth().weight(1F)
+                    ) {
+                        Text(
+                            "表名",
+                            fontSize = 13.sp,
+                            textAlign = TextAlign.Start,
+                            fontWeight = W500,
+                            modifier = Modifier.weight(1.3F)
+                        )
+                        Spacer(modifier = Modifier.weight(0.1F))
+                        BasicTextField(
+                            tableName,
+                            onValueChange = {
+                                tableName = it
+                            },
+                            readOnly = false,
+                            enabled = true,
+                            modifier = Modifier.weight(2F).height(28.dp).clip(RoundedCornerShape(5.dp))
+                                .background(Color(0xFF4C5052)).padding(horizontal = 10.dp)
+                                .hoverable(remember { MutableInteractionSource() }, true)
+                                .pointerHoverIcon(PointerIcon.Text),
+                            textStyle = TextStyle(
+                                color = Color(0xFFd9dbdf),
+                                fontSize = with(LocalDensity.current) {
+                                    14.dp.toSp()
+                                },
+                                textAlign = TextAlign.Start,
+                            ), cursorBrush = SolidColor(Color.White),
+
+                            maxLines = 1, decorationBox = {
+                                Row(
+                                    horizontalArrangement = Arrangement.Start,
+                                    verticalAlignment = Alignment.CenterVertically,
+                                    modifier = Modifier.fillMaxSize()
+                                ) {
+                                    it()
+                                }
+                            }
+                        )
+                    }
+
+                }
+                Row(
+                    horizontalArrangement = Arrangement.SpaceAround,
+                    verticalAlignment = Alignment.CenterVertically,
+                    modifier = Modifier.fillMaxWidth().padding(top = 20.dp)
+                ) {
+                    Row(
+                        horizontalArrangement = Arrangement.Center,
+                        verticalAlignment = Alignment.CenterVertically,
+                        modifier = Modifier.fillMaxWidth().weight(1F)
+                    ) {
+                        Text(
+                            "菜单名称",
+                            fontSize = 13.sp,
+                            textAlign = TextAlign.Start,
+                            fontWeight = W500,
+                            modifier = Modifier.weight(1.3F)
+                        )
+                        Spacer(modifier = Modifier.weight(.1F))
+
+                        //显示选中的文本
+                        BasicTextField(
+                            menuName,
+                            onValueChange = {
+                                menuName = it
+                            },
+                            readOnly = false,
+                            enabled = true,
+                            modifier = Modifier.weight(2F).height(28.dp).clip(RoundedCornerShape(5.dp))
+                                .background(Color(0xFF4C5052)).padding(horizontal = 10.dp)
+                                .hoverable(remember { MutableInteractionSource() }, true)
+                                .pointerHoverIcon(PointerIcon.Text),
+                            textStyle = TextStyle(
+                                color = Color(0xFFd9dbdf),
+                                fontSize = with(LocalDensity.current) {
+                                    14.dp.toSp()
+                                },
+                                textAlign = TextAlign.Start,
+                            ), cursorBrush = SolidColor(Color.White), maxLines = 1, decorationBox = {
+                                Row(
+                                    horizontalArrangement = Arrangement.Start,
+                                    verticalAlignment = Alignment.CenterVertically,
+                                    modifier = Modifier.fillMaxSize()
+                                ) {
+                                    it()
+                                }
+                            }
+                        )
+
+
+                    }
+                    Spacer(modifier = Modifier.weight(0.1F))
+                    Row(
+                        horizontalArrangement = Arrangement.Center,
+                        verticalAlignment = Alignment.CenterVertically,
+                        modifier = Modifier.fillMaxWidth().weight(1F)
+                    ) {
+                        Text(
+                            "需要继承租户实体类",
+                            fontSize = 13.sp,
+                            textAlign = TextAlign.Start,
+                            fontWeight = W500,
+                            modifier = Modifier.weight(1.3F)
+                        )
+                        Spacer(modifier = Modifier.weight(0.1F))
+                        Row(
+                            modifier = Modifier.weight(2F),
+                            horizontalArrangement = Arrangement.Start,
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
+
+                            CompositionLocalProvider(
+                                LocalIndication provides NoIndication
+                            ) {
+                                Switch(
+                                    checked = inheritTenant,
+                                    onCheckedChange = {
+                                        inheritTenant = it
+                                    },
+                                    modifier = Modifier.fillMaxWidth(0.3F).height(28.dp),
+                                    colors = SwitchDefaults.colors(checkedThumbColor = Color(0xFF3374f0))
+                                )
+                            }
+
+                        }
+                    }
+
+                }
             }
 
         }
@@ -665,7 +734,7 @@ fun Select(project: Project?, isService: Boolean = false, modifier: Modifier) {
                 props.check.let { props.callBack(it, false) }
             },
             modifier = Modifier
-                .background(Color(0xFF2b2d30)).fillMaxWidth(0.26F).height(220.dp)
+                .background(Color(0xFF2b2d30)).fillMaxWidth(0.255F).height(220.dp)
         ) {
             SelectOption(prop)
         }
