@@ -17,6 +17,7 @@ import androidx.compose.material.icons.filled.ArrowDropDown
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.awt.ComposeWindow
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.SolidColor
@@ -32,27 +33,37 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.intellij.openapi.module.ModuleManager
 import com.intellij.openapi.project.Project
+import java.util.*
+import javax.swing.JFileChooser
+import javax.swing.JOptionPane
 
 
 @Composable
-fun Add(project: Project?, toMain: () -> Unit = {}) {
-    var frontEndPackage by remember { mutableStateOf("") }
-    var rearEndPackage by remember { mutableStateOf("") }
-    var url by remember { mutableStateOf("") }
-    var port by remember { mutableStateOf("") }
-    var userName by remember { mutableStateOf("") }
-    var passWord by remember { mutableStateOf("") }
-    var dataBaseName by remember { mutableStateOf("") }
-    var tableName by remember { mutableStateOf("") }
-    var menuName by remember { mutableStateOf("") }
-    var inheritTenant by remember { mutableStateOf(true) }
-    var name by remember { mutableStateOf("") }
+fun Add(project: Project?, serviceR: MyService?, id: String? = null, toMain: (String?) -> Unit = {}) {
+    val info: Info = if (serviceR != null) {
+        serviceR.infoMap[id] ?: Info()
+    } else {
+        Info()
+    }
+    var frontEndPackage by remember { mutableStateOf(info.frontEndPackage) }
+    var rearEndPackage by remember { mutableStateOf(info.rearEndPackage) }
+    var url by remember { mutableStateOf(info.url) }
+    var port by remember { mutableStateOf(info.port) }
+    var userName by remember { mutableStateOf(info.userName) }
+    var passWord by remember { mutableStateOf(info.passWord) }
+    var dataBaseName by remember { mutableStateOf(info.dataBaseName) }
+    var tableName by remember { mutableStateOf(info.tableName) }
+    var menuName by remember { mutableStateOf(info.menuName) }
+    var inheritTenant by remember { mutableStateOf(info.inheritTenant) }
+    var name by remember { mutableStateOf(info.name) }
+    var service by remember { mutableStateOf(info.service) }
+    var `service-api` by remember { mutableStateOf(info.`service-api`) }
 
 
     Scaffold(
         topBar = {
             TopAppBar(title = {
-            }, backgroundColor = Color.Transparent, modifier = Modifier.height(30.dp), elevation = 0.dp)
+            }, backgroundColor = Color.Transparent, modifier = Modifier.height(20.dp), elevation = 0.dp)
         },
         bottomBar = {
             BottomAppBar(backgroundColor = Color.Transparent, elevation = 0.dp) {
@@ -63,7 +74,7 @@ fun Add(project: Project?, toMain: () -> Unit = {}) {
                 ) {
                     TextButton(
                         onClick = {
-                            toMain()
+                            toMain(null)
                         },
                         colors = ButtonDefaults.buttonColors(backgroundColor = Color(0xFF4C5052)),
                         shape = RoundedCornerShape(8.dp),
@@ -75,9 +86,157 @@ fun Add(project: Project?, toMain: () -> Unit = {}) {
                     }
                     Spacer(modifier = Modifier.width(10.dp))
                     TextButton(
-                        onClick = {
+                        onClick = la@{
+                            //检查数据是否都不为空
+                            if (frontEndPackage.isBlank()) {
+                                JOptionPane.showMessageDialog(
+                                    ComposeWindow(),
+                                    "前端目录不可为空",
+                                    "错误",
+                                    JOptionPane.ERROR_MESSAGE
 
-                        }, colors = ButtonDefaults.buttonColors(backgroundColor = Color(0xFF3374f0)),
+                                )
+                                return@la
+
+                            }
+                            if (rearEndPackage.isBlank()) {
+                                JOptionPane.showMessageDialog(
+                                    ComposeWindow(),
+                                    "后端包不可为空",
+                                    "错误",
+                                    JOptionPane.ERROR_MESSAGE
+
+                                )
+                                return@la
+
+                            }
+                            if (url.isBlank()) {
+                                JOptionPane.showMessageDialog(
+                                    ComposeWindow(),
+                                    "数据库连接地址不可为空",
+                                    "错误",
+                                    JOptionPane.ERROR_MESSAGE
+
+                                )
+                                return@la
+
+                            }
+                            if (port.isBlank()) {
+                                JOptionPane.showMessageDialog(
+                                    ComposeWindow(),
+                                    "端口不可为空",
+                                    "错误",
+                                    JOptionPane.ERROR_MESSAGE
+
+                                )
+                                return@la
+
+                            }
+                            if (userName.isBlank()) {
+                                JOptionPane.showMessageDialog(
+                                    ComposeWindow(),
+                                    "用户名不可为空",
+                                    "错误",
+                                    JOptionPane.ERROR_MESSAGE
+
+                                )
+                                return@la
+
+                            }
+                            if (passWord.isBlank()) {
+                                JOptionPane.showMessageDialog(
+                                    ComposeWindow(),
+                                    "密码不可为空",
+                                    "错误",
+                                    JOptionPane.ERROR_MESSAGE
+
+                                )
+                                return@la
+
+                            }
+                            if (dataBaseName.isBlank()) {
+                                JOptionPane.showMessageDialog(
+                                    ComposeWindow(),
+                                    "数据库名称不可为空",
+                                    "错误",
+                                    JOptionPane.ERROR_MESSAGE
+
+                                )
+                                return@la
+
+                            }
+                            if (tableName.isBlank()) {
+                                JOptionPane.showMessageDialog(
+                                    ComposeWindow(),
+                                    "表名不可为空",
+                                    "错误",
+                                    JOptionPane.ERROR_MESSAGE
+
+                                )
+                                return@la
+
+                            }
+                            if (menuName.isBlank()) {
+                                JOptionPane.showMessageDialog(
+                                    ComposeWindow(),
+                                    "菜单名称不可为空",
+                                    "错误",
+                                    JOptionPane.ERROR_MESSAGE
+
+                                )
+                                return@la
+
+                            }
+                            if (service.isBlank()) {
+                                JOptionPane.showMessageDialog(
+                                    ComposeWindow(),
+                                    "service不可为空",
+                                    "错误",
+                                    JOptionPane.ERROR_MESSAGE
+
+                                )
+                                return@la
+
+                            }
+                            if (`service-api`.isBlank()) {
+                                JOptionPane.showMessageDialog(
+                                    ComposeWindow(),
+                                    "service-api不可为空",
+                                    "错误",
+                                    JOptionPane.ERROR_MESSAGE
+
+                                )
+                                return@la
+
+                            }
+                            if (name.isBlank()) {
+                                JOptionPane.showMessageDialog(
+                                    ComposeWindow(),
+                                    "别名不可为空",
+                                    "错误",
+                                    JOptionPane.ERROR_MESSAGE
+
+                                )
+                                return@la
+
+                            }
+                            val info = Info(
+                                name,
+                                frontEndPackage,
+                                rearEndPackage,
+                                url,
+                                port,
+                                userName,
+                                passWord,
+                                dataBaseName,
+                                tableName,
+                                menuName,
+                                inheritTenant, service, `service-api`
+                            )
+                            serviceR?.let { it.infoMap[id ?: UUID.randomUUID().toString()] = info }
+                            toMain(null)
+
+                        }, colors = ButtonDefaults.buttonColors(backgroundColor = Color(0xFF3374f0),),
                         shape = RoundedCornerShape(8.dp),
                         modifier = Modifier.height(24.dp).width(42.dp),
                         contentPadding = PaddingValues(vertical = 0.dp, horizontal = 6.dp),
@@ -95,9 +254,11 @@ fun Add(project: Project?, toMain: () -> Unit = {}) {
             horizontalAlignment = Alignment.CenterHorizontally,
             modifier = Modifier.padding(it).fillMaxSize()
         ) {
-            Column  (Modifier.clip(RoundedCornerShape(5.dp))
-                .border(0.1.dp, Color(0x22AFB1B3), RoundedCornerShape(5.dp))
-                .padding(10.dp)) {
+            Column(
+                Modifier.clip(RoundedCornerShape(5.dp))
+                    .border(0.1.dp, Color(0x22AFB1B3), RoundedCornerShape(5.dp))
+                    .padding(10.dp)
+            ) {
                 Row(
                     horizontalArrangement = Arrangement.Center,
                     verticalAlignment = Alignment.CenterVertically,
@@ -175,7 +336,9 @@ fun Add(project: Project?, toMain: () -> Unit = {}) {
                             modifier = Modifier.weight(1.3F)
                         )
                         Spacer(modifier = Modifier.weight(.1F))
-                        Select(project, true, modifier = Modifier.weight(2F))
+                        Select(project, true, modifier = Modifier.weight(2F),service) { v ->
+                            service = v
+                        }
                     }
                     Spacer(Modifier.weight(0.1F))
                     Row(
@@ -191,7 +354,9 @@ fun Add(project: Project?, toMain: () -> Unit = {}) {
                             modifier = Modifier.weight(1.3F)
                         )
                         Spacer(modifier = Modifier.weight(.1F))
-                        Select(project, modifier = Modifier.weight(2F))
+                        Select(project, modifier = Modifier.weight(2F), c = `service-api`, param = { v ->
+                            `service-api` = v
+                        })
                     }
                 }
 
@@ -263,21 +428,30 @@ fun Add(project: Project?, toMain: () -> Unit = {}) {
 
                             frontEndPackage,
                             onValueChange = {
-                                frontEndPackage = it
+
                             },
-                            readOnly = false,
-                            enabled = true,
+                            readOnly = true,
+                            enabled = false,
                             modifier = Modifier.weight(2F).height(28.dp).clip(RoundedCornerShape(5.dp))
                                 .background(Color(0xFF4C5052)).padding(horizontal = 10.dp)
                                 .hoverable(remember { MutableInteractionSource() }, true)
-                                .pointerHoverIcon(PointerIcon.Text),
+                                .pointerHoverIcon(PointerIcon.Hand)
+                                .clickable {
+                                    JFileChooser(frontEndPackage).apply {
+                                        fileSelectionMode = JFileChooser.DIRECTORIES_ONLY
+                                        if (showOpenDialog(ComposeWindow()) == JFileChooser.APPROVE_OPTION) {
+                                            frontEndPackage = selectedFile.absolutePath
+                                        }
+                                    }
+                                },
+
                             textStyle = TextStyle(
                                 color = Color(0xFFd9dbdf),
                                 fontSize = with(LocalDensity.current) {
                                     14.dp.toSp()
                                 },
                                 textAlign = TextAlign.Start,
-                            ), cursorBrush = SolidColor(Color.White), maxLines = 1, decorationBox = {
+                            ), singleLine = true, cursorBrush = SolidColor(Color.White), maxLines = 1, decorationBox = {
                                 Row(
                                     horizontalArrangement = Arrangement.Start,
                                     verticalAlignment = Alignment.CenterVertically,
@@ -681,7 +855,7 @@ object NoIndication : Indication {
     }
 }
 
-class Props(private val project: Project?, private val isService: Boolean) {
+class Props(private val project: Project?, private val isService: Boolean, param: (String) -> Unit,c:String) {
     var expanded = false
     val selectList: List<String>
         get() = project?.let { p ->
@@ -691,20 +865,16 @@ class Props(private val project: Project?, private val isService: Boolean) {
                 .toList()
         } ?: listOf("")
     var check: String by mutableStateOf(
-        if (selectList.isEmpty()) {
-            ""
-        } else {
-            selectList[0]
-        }
+       c
     )
     lateinit var callBack: (String, Boolean) -> Unit
 }
 
 
 @Composable
-fun Select(project: Project?, isService: Boolean = false, modifier: Modifier) {
+fun Select(project: Project?, isService: Boolean = false, modifier: Modifier,c: String, param: (String) -> Unit) {
     val props = remember(project) {
-        Props(project, isService)
+        Props(project, isService, param,c)
     }
 
     /**
@@ -715,6 +885,7 @@ fun Select(project: Project?, isService: Boolean = false, modifier: Modifier) {
     props.callBack = fun(check: String, expand: Boolean) {
         dropExpand = expand
         props.check = check
+        param.invoke(check)
     }
     val prop by remember { mutableStateOf(props) }
     val rememberScrollState = rememberScrollState()
@@ -756,6 +927,7 @@ fun SelectedTextBox(props: Props) {
             props.check = it
         },
         readOnly = true,
+        maxLines = 1,
         enabled = false,
         modifier = Modifier.height(28.dp).fillMaxWidth().clip(RoundedCornerShape(5.dp))
             .background(Color(0xFF4C5052)).hoverable(remember { MutableInteractionSource() }, true)
