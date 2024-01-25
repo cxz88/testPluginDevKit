@@ -16,6 +16,11 @@ import javax.swing.JComponent
 
 class GAction : AnAction() {
     override fun actionPerformed(event: AnActionEvent) {
+        var service = event.project?.getService(MyService::class.java)
+        println(service?.state?.name)
+        service?.loadState(MyService().apply {
+            name="111"
+        })
         //应该弹出窗口
         SampleDialog(event.project).show()
 
