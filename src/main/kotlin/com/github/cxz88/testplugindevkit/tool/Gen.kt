@@ -53,7 +53,7 @@ fun Gen(project: Project?, service: MyService?, rowInfoList: String, function: (
                 overflow = TextOverflow.Ellipsis, textAlign = TextAlign.Center
             )
             var process by remember { mutableFloatStateOf(0F) }
-            val animateFloatAsState by animateFloatAsState(process, animationSpec = tween(500))
+            val animateFloatAsState by animateFloatAsState(process, animationSpec = tween(800))
             val c by animateColorAsState(
                 if (process == 1F) {
                     Color.Green
@@ -61,7 +61,7 @@ fun Gen(project: Project?, service: MyService?, rowInfoList: String, function: (
                     Color(0xFF3374f0)
                 } else {
                     Color.Red
-                }, animationSpec = tween(500)
+                }, animationSpec = tween(800)
             )
             LaunchedEffect(Unit) {
                 launch(Dispatchers.IO) {
