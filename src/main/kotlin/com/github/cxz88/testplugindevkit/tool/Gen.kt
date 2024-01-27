@@ -7,6 +7,7 @@ package com.github.cxz88.testplugindevkit.tool
 
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.core.animateFloatAsState
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
@@ -52,7 +53,7 @@ fun Gen(project: Project?, service: MyService?, rowInfoList: String, function: (
                 overflow = TextOverflow.Ellipsis, textAlign = TextAlign.Center
             )
             var process by remember { mutableFloatStateOf(0F) }
-            val animateFloatAsState by animateFloatAsState(process)
+            val animateFloatAsState by animateFloatAsState(process, animationSpec = tween(500))
             val c by animateColorAsState(
                 if (process == 1F) {
                     Color.Green
@@ -60,7 +61,7 @@ fun Gen(project: Project?, service: MyService?, rowInfoList: String, function: (
                     Color(0xFF3374f0)
                 } else {
                     Color.Red
-                }
+                }, animationSpec = tween(500)
             )
             LaunchedEffect(Unit) {
                 launch(Dispatchers.IO) {
