@@ -135,7 +135,14 @@ fun App(project: Project?, serviceR: MyService?, function: (String) -> Unit, toA
                             val animateColorAsState by
                             animateColorAsState(if (hover) Color(0xFF333538) else Color.Transparent)
                             Row(modifier = Modifier.fillMaxWidth()
-                                .height(if (index == 0 || index == rowInfo.size - 1) 50.dp else 30.dp)
+                                .height(if (rowInfo.size==1) {
+                                    70.dp
+                                } else if (index == 0 || index == rowInfo.size - 1) {
+                                    50.dp
+                                } else {
+                                    30.dp
+                                }
+                                )
                                 .padding(
                                     top = if (index == 0) 20.dp else 0.dp,
                                     bottom = if (index == rowInfo.size - 1) 20.dp else 0.dp

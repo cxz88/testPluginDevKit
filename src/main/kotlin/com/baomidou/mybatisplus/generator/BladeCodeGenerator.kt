@@ -5,9 +5,11 @@
 package com.baomidou.mybatisplus.generator
 
 import com.baomidou.mybatisplus.core.toolkit.IdWorker
+import com.baomidou.mybatisplus.core.toolkit.StringUtils
 import com.baomidou.mybatisplus.generator.config.OutputFile
 import com.baomidou.mybatisplus.generator.config.builder.CustomFile
 import com.github.cxz88.testplugindevkit.tool.MyService
+import com.github.cxz88.testplugindevkit.tool.SF
 import com.intellij.openapi.module.ModuleManager
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.roots.ModuleRootManager
@@ -29,7 +31,10 @@ class BladeCodeGenerator {
         )
 
     suspend fun run(
-        mutableSharedFlow: MutableSharedFlow<Float>, toList: List<String>, project: Project?, service: MyService?
+        mutableSharedFlow: MutableSharedFlow<SF.MsgHandler>,
+        toList: List<String>,
+        project: Project?,
+        service: MyService?
     ) {
 
         //获取模块
@@ -62,92 +67,137 @@ class BladeCodeGenerator {
                         }
                         //组装api的文件路径
                         val packageName = info.rearEndPackage.replace(".", "/")
-                        FastAutoGenerator.create(
-                            "jdbc:mysql://${info.url}:${info.port}/${info.dataBaseName}", info.userName, info.passWord
-                        ).globalConfig { builder ->
-                            builder.author("大帅比") // 设置作者
-                                .outputDir("$serviceApiPath").disableOpenDir()
-                        }.packageConfig { builder ->
-                            builder
-                                .pathInfo(
-                                    mapOf(
-                                        OutputFile.entity to "${serviceApiPath}/src/main/java/${packageName}/entity/${mou}",
-                                        OutputFile.xml to "${servicePath}/src/main/java/${packageName}/mapper/${mou}",
-                                        OutputFile.mapper to "${servicePath}/src/main/java/${packageName}/mapper/${mou}",
-                                        OutputFile.service to "${servicePath}/src/main/java/${packageName}/service/${mou}",
-                                        OutputFile.serviceImpl to "${servicePath}/src/main/java/${packageName}/service/Impl/${mou}",
-                                        OutputFile.controller to "${servicePath}/src/main/java/${packageName}/controller/${mou}",
-                                    )
+                        try {
+                            FastAutoGenerator.create(
+                                "jdbc:mysql://${info.url}:${info.port}/${info.dataBaseName}",
+                                info.userName,
+                                info.passWord
+                            ).globalConfig { builder ->
+                                builder.author("大帅比") // 设置作者
+                                    .outputDir("$serviceApiPath")
+                                    .enableSwagger()
+                                    .disableOpenDir()
+                            }.packageConfig { builder ->
+                                builder
+                                    .parent(info.rearEndPackage)
+                                    .moduleName("")
+                                    .entity("entity.${info.mou}")
+                                    .service("service.${info.mou}")
+                                    .serviceImpl("service.impl.${info.mou}")
+                                    .mapper("mapper.${info.mou}")
+                                    .controller("controller.${info.mou}")
+                                    .pathInfo(
+                                        mapOf(
+                                            OutputFile.entity to "${serviceApiPath}/src/main/java/${packageName}/entity/${mou}",
+                                            OutputFile.xml to "${servicePath}/src/main/java/${packageName}/mapper/${mou}",
+                                            OutputFile.mapper to "${servicePath}/src/main/java/${packageName}/mapper/${mou}",
+                                            OutputFile.service to "${servicePath}/src/main/java/${packageName}/service/${mou}",
+                                            OutputFile.serviceImpl to "${servicePath}/src/main/java/${packageName}/service/Impl/${mou}",
+                                            OutputFile.controller to "${servicePath}/src/main/java/${packageName}/controller/${mou}",
+                                        )
 
-                                ) // 设置mapperXml生成路径
-                        }.strategyConfig { builder ->
-                            builder.apply {
-                                addInclude(info.tableName)
-                            }
-                            builder.entityBuilder().apply {
-                                addSuperEntityColumns(SUPER_ENTITY_COLUMNS)
-                                superClass("org.springblade.core.tenant.mp.TenantEntity")
-                                enableLombok()
-                            }
-                            builder.serviceBuilder().apply {
-                                superServiceClass("org.springblade.core.mp.base.BaseService")
-                                superServiceImplClass("org.springblade.core.mp.base.BaseServiceImpl")
-                            }
-                            builder.controllerBuilder().apply {
-                                superClass("org.springblade.core.boot.ctrl.BladeController")
-                            }
-                        }.templateConfig { template ->
-                            template.apply {
-                                controller("templates/controllor.java.vm")
-                                xml("templates/mapper.xml.vm")
-                                mapper("templates/mapper.java.vm")
-                                entity("templates/entity.java.vm")
-                                service("templates/service.java.vm")
-                                serviceImpl("templates/serviceImpl.java.vm")
-                            }
-                        }.injectionConfig { consumer ->
-                            val map = mutableMapOf<String, Any>(
-                                "codeName" to info.menuName,
-                                "servicePackageLowerCase" to info.mou,
-                                "serviceName" to info.service
-                            )
-                            consumer.beforeOutputFile { biConsumer, _ ->
-                                map["entityKey"] = biConsumer.entityName.lowercase()
-                                map["menuId"] = IdWorker.getId()
-                                map["addMenuId"] = IdWorker.getId()
-                                map["removeMenuId"] = IdWorker.getId()
-                                map["viewMenuId"] = IdWorker.getId()
-                                map["editMenuId"] = IdWorker.getId()
-                            }
-                            consumer.customFile(
-                                listOf(
-                                    CustomFile.Builder().filePath("${info.frontEndPackage}/src/view/${mou}")
-                                        .templatePath("templates/saber/crud.vue.vm")
-                                        .fileName("${info.tableName.lowercase()}.vue")
-                                        .build(),
-                                    CustomFile.Builder().filePath("${info.frontEndPackage}/src/api/${mou}")
-                                        .templatePath("templates/saber/api.js.vm")
-                                        .fileName("${info.tableName.lowercase()}.js")
-                                        .build(),
-                                    CustomFile.Builder().filePath("${servicePath}/src/main/java/sql/${mou}")
-                                        .templatePath("templates/sql/menu.sql.vm")
-                                        .fileName("${info.tableName.lowercase()}.sql")
-                                        .build(),
-                                    CustomFile.Builder()
-                                        .filePath("${serviceApiPath}/src/main/java/${packageName}/dto/${mou}")
-                                        .templatePath("templates/entityDTO.java.vm")
-                                        .build(),
-                                    CustomFile.Builder()
-                                        .filePath("${serviceApiPath}/src/main/java/${packageName}/vo/${mou}")
-                                        .templatePath("templates/entityVO.java.vm")
-                                        .build()
-
-                                ),
+                                    ) // 设置mapperXml生成路径
+                            }.strategyConfig { builder ->
+                                builder.apply {
+                                    addInclude(info.tableName)
+                                }
+                                builder.entityBuilder().apply {
+                                    addSuperEntityColumns(SUPER_ENTITY_COLUMNS)
+                                    superClass("org.springblade.core.tenant.mp.TenantEntity")
+                                    enableLombok()
+                                    enableFileOverride()
+                                }
+                                builder.serviceBuilder().apply {
+                                    superServiceClass("org.springblade.core.mp.base.BaseService")
+                                    superServiceImplClass("org.springblade.core.mp.base.BaseServiceImpl")
+                                    enableFileOverride()
+                                }
+                                builder.controllerBuilder().apply {
+                                    superClass("org.springblade.core.boot.ctrl.BladeController")
+                                    enableFileOverride()
+                                }
+                                builder.mapperBuilder().apply {
+                                    enableFileOverride()
+                                }
+                            }.templateConfig { template ->
+                                template.apply {
+                                    controller("templates/mom/controller.java.vm")
+                                    xml("templates/mom/mapper.xml.vm")
+                                    mapper("templates/mom/mapper.java.vm")
+                                    entity("templates/mom/entity.java.vm")
+                                    service("templates/mom/service.java.vm")
+                                    serviceImpl("templates/mom/serviceImpl.java.vm")
+                                }
+                            }.injectionConfig { consumer ->
+                                val map = mutableMapOf(
+                                    "codeName" to info.menuName,
+                                    "servicePackageLowerCase" to "${info.rearEndPackage.split(".").last()}/${info.mou}",
+                                    "serviceName" to info.service,
+                                    "servicePackage" to info.mou,
+                                    "commonFields" to SUPER_ENTITY_COLUMNS.map { StringUtils.camelToUnderline(it) to it }
 
                                 )
-                            consumer.customMap(map)
+                                consumer.beforeOutputFile { biConsumer, _ ->
+                                    map["entityKey"] = biConsumer.name
+                                    map["menuId"] = IdWorker.getId()
+                                    map["addMenuId"] = IdWorker.getId()
+                                    map["removeMenuId"] = IdWorker.getId()
+                                    map["viewMenuId"] = IdWorker.getId()
+                                    map["editMenuId"] = IdWorker.getId()
+                                }
+                                consumer.customFile(
+                                    listOf(
+                                        CustomFile.Builder().filePath(
+                                            "${info.frontEndPackage}/src/view/${
+                                                info.rearEndPackage.split(".").last()
+                                            }/${mou}"
+                                        )
+                                            .templatePath("templates/saber/crud.vue.vm")
+                                            .formatNameFunction { it.name }
+                                            .fileName(".vue")
+                                            .enableFileOverride()
+                                            .build(),
+                                        CustomFile.Builder().filePath(
+                                            "${info.frontEndPackage}/src/api/${
+                                                info.rearEndPackage.split(".").last()
+                                            }/${mou}"
+                                        )
+                                            .templatePath("templates/saber/api.js.vm")
+                                            .formatNameFunction { it.name }
+                                            .enableFileOverride()
+                                            .fileName(".js")
+                                            .build(),
+                                        CustomFile.Builder().filePath("${servicePath}/src/main/java/sql/${mou}")
+                                            .templatePath("templates/sql/menu.sql.vm")
+                                            .formatNameFunction { it.name }
+                                            .enableFileOverride()
+                                            .fileName(".sql")
+                                            .build(),
+                                        CustomFile.Builder()
+                                            .filePath("${serviceApiPath}/src/main/java/${packageName}/dto/${mou}")
+                                            .templatePath("templates/mom/entityDTO.java.vm")
+                                            .formatNameFunction { it.entityName }
+                                            .enableFileOverride()
+                                            .fileName("DTO.java")
+                                            .build(),
+                                        CustomFile.Builder()
+                                            .filePath("${serviceApiPath}/src/main/java/${packageName}/vo/${mou}")
+                                            .templatePath("templates/mom/entityVO.java.vm")
+                                            .formatNameFunction { it.entityName }
+                                            .enableFileOverride()
+                                            .fileName("VO.java")
+                                            .build()
 
-                        }.execute()
+                                    ),
+
+                                    )
+                                consumer.customMap(map)
+
+                            }.execute()
+                            mutableSharedFlow.emit(SF.MsgHandler("构建成功", 1F))
+                        } catch (e: Exception) {
+                            mutableSharedFlow.emit(SF.MsgHandler("构建失败:${e.message}", -1F))
+                        }
                     }
 
 
