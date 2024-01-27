@@ -41,6 +41,9 @@ class BladeCodeGenerator {
         project?.let { p ->
             val instance = ModuleManager.getInstance(p)
             val modules = instance.modules
+            var pr = 0F
+            val p1 = 1F / toList.size
+            val p2 = p1 / 2
             service?.let { sr ->
                 for (s in toList) {
                     val info = sr.infoMap[s]
@@ -67,7 +70,8 @@ class BladeCodeGenerator {
                         }
                         //组装api的文件路径
                         val packageName = info.rearEndPackage.replace(".", "/")
-                        mutableSharedFlow.emit(SF.MsgHandler("正在构建", 0.5F))
+                        pr += p2
+                        mutableSharedFlow.emit(SF.MsgHandler("正在构建", pr))
                         try {
                             FastAutoGenerator.create(
                                 "jdbc:mysql://${info.url}:${info.port}/${info.dataBaseName}",
@@ -196,7 +200,9 @@ class BladeCodeGenerator {
 
 
                             }.execute()
-                            mutableSharedFlow.emit(SF.MsgHandler("构建成功", 1F))
+                            pr += p2
+                            mutableSharedFlow.emit(SF.MsgHandler("正在构建", pr))
+
                         } catch (e: Exception) {
                             mutableSharedFlow.emit(SF.MsgHandler("构建失败:${e.message}", -1F))
                         }
@@ -204,6 +210,7 @@ class BladeCodeGenerator {
 
 
                 }
+                mutableSharedFlow.emit(SF.MsgHandler("构建成功", 1F))
 
 
             }

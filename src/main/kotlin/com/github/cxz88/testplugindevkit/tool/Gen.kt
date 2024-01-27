@@ -69,7 +69,7 @@ fun Gen(project: Project?, service: MyService?, rowInfoList: String, function: (
                 }
                 withContext(Dispatchers.IO) {
                     SF.mutableSharedFlow.collect {
-                        process = it.value
+                        process = it.value.coerceAtMost(1F)
                         msg = it.msg
                     }
                 }
