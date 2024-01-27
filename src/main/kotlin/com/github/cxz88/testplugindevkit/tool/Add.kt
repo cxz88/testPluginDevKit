@@ -45,7 +45,7 @@ import javax.swing.JOptionPane
 @Composable
 @Suppress("DuplicatedCode")
 fun Add(project: Project?, serviceR: MyService?, id: String? = null, toMain: (String?) -> Unit = {}) {
-    val info: Info = if (serviceR != null) {
+    val info: Info = if (serviceR != null && id != null && id != "0") {
         serviceR.infoMap[id] ?: Info()
     } else {
         Info()
@@ -237,7 +237,7 @@ fun Add(project: Project?, serviceR: MyService?, id: String? = null, toMain: (St
                                 return@la
 
                             }
-                            val info = Info(
+                            val info1 = Info(
                                 name,
                                 frontEndPackage,
                                 rearEndPackage,
@@ -248,9 +248,9 @@ fun Add(project: Project?, serviceR: MyService?, id: String? = null, toMain: (St
                                 dataBaseName,
                                 tableName,
                                 menuName,
-                                inheritTenant, service, `service-api`,mou
+                                inheritTenant, service, `service-api`, mou, info.sort
                             )
-                            serviceR?.let { it.infoMap[id ?: UUID.randomUUID().toString()] = info }
+                            serviceR?.let { it.infoMap[id ?: UUID.randomUUID().toString()] = info1 }
                             toMain(null)
 
                         }, colors = ButtonDefaults.buttonColors(backgroundColor = Color(0xFF3374f0)),
@@ -510,7 +510,7 @@ fun Add(project: Project?, serviceR: MyService?, id: String? = null, toMain: (St
                             fontSize = 13.sp,
                             textAlign = TextAlign.Start,
                             fontWeight = W500,
-                            modifier = Modifier.weight(1.3F),color = Color.White
+                            modifier = Modifier.weight(1.3F), color = Color.White
                         )
                         Spacer(modifier = Modifier.weight(.1F))
 
@@ -556,7 +556,7 @@ fun Add(project: Project?, serviceR: MyService?, id: String? = null, toMain: (St
                             fontSize = 13.sp,
                             textAlign = TextAlign.Start,
                             fontWeight = W500,
-                            modifier = Modifier.weight(1.3F),color = Color.White
+                            modifier = Modifier.weight(1.3F), color = Color.White
                         )
                         Spacer(modifier = Modifier.weight(0.1F))
                         BasicTextField(
@@ -604,7 +604,7 @@ fun Add(project: Project?, serviceR: MyService?, id: String? = null, toMain: (St
                             fontSize = 13.sp,
                             textAlign = TextAlign.Start,
                             fontWeight = W500,
-                            modifier = Modifier.weight(1.3F),color = Color.White
+                            modifier = Modifier.weight(1.3F), color = Color.White
                         )
                         Spacer(modifier = Modifier.weight(.1F))
 
@@ -650,7 +650,7 @@ fun Add(project: Project?, serviceR: MyService?, id: String? = null, toMain: (St
                             fontSize = 13.sp,
                             textAlign = TextAlign.Start,
                             fontWeight = W500,
-                            modifier = Modifier.weight(1.3F),color = Color.White
+                            modifier = Modifier.weight(1.3F), color = Color.White
                         )
                         Spacer(modifier = Modifier.weight(0.1F))
                         BasicTextField(
@@ -699,7 +699,7 @@ fun Add(project: Project?, serviceR: MyService?, id: String? = null, toMain: (St
                             fontSize = 13.sp,
                             textAlign = TextAlign.Start,
                             fontWeight = W500,
-                            modifier = Modifier.weight(1.3F),color = Color.White
+                            modifier = Modifier.weight(1.3F), color = Color.White
                         )
                         Spacer(modifier = Modifier.weight(.1F))
 
@@ -745,7 +745,7 @@ fun Add(project: Project?, serviceR: MyService?, id: String? = null, toMain: (St
                             fontSize = 13.sp,
                             textAlign = TextAlign.Start,
                             fontWeight = W500,
-                            modifier = Modifier.weight(1.3F),color = Color.White
+                            modifier = Modifier.weight(1.3F), color = Color.White
                         )
                         Spacer(modifier = Modifier.weight(0.1F))
                         BasicTextField(
@@ -795,7 +795,7 @@ fun Add(project: Project?, serviceR: MyService?, id: String? = null, toMain: (St
                             fontSize = 13.sp,
                             textAlign = TextAlign.Start,
                             fontWeight = W500,
-                            modifier = Modifier.weight(1.3F),color = Color.White
+                            modifier = Modifier.weight(1.3F), color = Color.White
                         )
                         Spacer(modifier = Modifier.weight(.1F))
 
@@ -841,7 +841,7 @@ fun Add(project: Project?, serviceR: MyService?, id: String? = null, toMain: (St
                             fontSize = 13.sp,
                             textAlign = TextAlign.Start,
                             fontWeight = W500,
-                            modifier = Modifier.weight(1.3F),color = Color.White
+                            modifier = Modifier.weight(1.3F), color = Color.White
                         )
                         Spacer(modifier = Modifier.weight(0.1F))
                         Row(
@@ -882,7 +882,7 @@ fun Add(project: Project?, serviceR: MyService?, id: String? = null, toMain: (St
                             fontSize = 13.sp,
                             textAlign = TextAlign.Start,
                             fontWeight = W500,
-                            modifier = Modifier.weight(1.3F),color = Color.White
+                            modifier = Modifier.weight(1.3F), color = Color.White
                         )
                         Spacer(modifier = Modifier.weight(.1F))
 

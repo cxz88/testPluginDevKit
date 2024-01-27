@@ -6,10 +6,7 @@ package com.github.cxz88.testplugindevkit.tool
  */
 
 import androidx.compose.animation.animateColorAsState
-import androidx.compose.foundation.BorderStroke
-import androidx.compose.foundation.background
-import androidx.compose.foundation.border
-import androidx.compose.foundation.clickable
+import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -22,6 +19,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.pointer.PointerEventType
@@ -31,27 +29,33 @@ import androidx.compose.ui.input.pointer.pointerHoverIcon
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.state.ToggleableState
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
-import com.intellij.openapi.project.Project
+import androidx.compose.ui.unit.sp
+import java.time.LocalDateTime
+import java.time.format.DateTimeFormatter
+import java.util.*
 
 
-@OptIn(ExperimentalComposeUiApi::class)
+@Suppress("DuplicatedCode")
+@OptIn(ExperimentalComposeUiApi::class, ExperimentalFoundationApi::class)
 @Composable
-fun App(project: Project?, serviceR: MyService?, function: (String) -> Unit, toAdd: (String?) -> Unit = {}) {
-    val rowInfo =
-        remember {
-            serviceR?.run {
-                infoMap.entries.map { (key, value) ->
-                    RowInfo().apply {
-                        text = value.name
-                        id = key
-                    }
-                }.toMutableStateList()
-            }
-
-
-        }
-
+fun App(serviceR: MyService?, function: (String) -> Unit, toAdd: (String?) -> Unit = {}) {
+    var rowInfo by remember {
+        mutableStateOf(serviceR?.run {
+            infoMap.entries.sortedBy {
+                LocalDateTime.from(
+                    DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")
+                        .parse(it.value.sort)
+                )
+            }.reversed().map { (key, value) ->
+                RowInfo().apply {
+                    text = value.name
+                    id = key
+                }
+            }.toMutableStateList()
+        } ?: mutableStateListOf())
+    }
     Surface(modifier = Modifier.fillMaxSize(), color = Color.Transparent) {
         Column {
             Row {
@@ -79,7 +83,7 @@ fun App(project: Project?, serviceR: MyService?, function: (String) -> Unit, toA
                 Spacer(modifier = Modifier.width(15.dp))
                 TextButton(
                     onClick = {
-                        rowInfo?.let { ss ->
+                        rowInfo.let { ss ->
                             ss.filter { it.check }.joinToString { it.id }.let {
                                 if (it.isNotEmpty()) {
                                     function(it)
@@ -127,7 +131,7 @@ fun App(project: Project?, serviceR: MyService?, function: (String) -> Unit, toA
 
                 LazyColumn(modifier = Modifier) {
 
-                    rowInfo?.forEachIndexed { index, item ->
+                    rowInfo.forEachIndexed { index, item ->
                         item {
                             var hover by remember {
                                 mutableStateOf(false)
@@ -135,13 +139,14 @@ fun App(project: Project?, serviceR: MyService?, function: (String) -> Unit, toA
                             val animateColorAsState by
                             animateColorAsState(if (hover) Color(0xFF333538) else Color.Transparent)
                             Row(modifier = Modifier.fillMaxWidth()
-                                .height(if (rowInfo.size==1) {
-                                    70.dp
-                                } else if (index == 0 || index == rowInfo.size - 1) {
-                                    50.dp
-                                } else {
-                                    30.dp
-                                }
+                                .height(
+                                    if (rowInfo.size == 1) {
+                                        70.dp
+                                    } else if (index == 0 || index == rowInfo.size - 1) {
+                                        50.dp
+                                    } else {
+                                        30.dp
+                                    }
                                 )
                                 .padding(
                                     top = if (index == 0) 20.dp else 0.dp,
@@ -194,17 +199,128 @@ fun App(project: Project?, serviceR: MyService?, function: (String) -> Unit, toA
                                 remember {
                                     FocusRequester
                                 }
-                                Text(
-                                    item.text,
-                                    modifier = Modifier.weight(1.5F).pointerHoverIcon(PointerIcon.Hand).clickable {
-                                        toAdd(item.id)
+                                Row(
+                                    modifier = Modifier.weight(0.1F),
+                                    verticalAlignment = Alignment.CenterVertically,
+                                    horizontalArrangement = Arrangement.Center
+                                ) {}
+                                TooltipArea(
+                                    tooltip = {
+                                        // 提示内容
+                                        Surface(
+                                            modifier = Modifier.shadow(1.dp, shape = RoundedCornerShape(4.dp)),
+                                            color = Color(0xFF2b2d30),
+                                            shape = RoundedCornerShape(4.dp)
+                                        ) {
+                                            Text(
+                                                text = "编辑 ${item.text}",
+                                                fontSize = 13.sp,
+                                                color = Color.White,
+                                                modifier = Modifier.padding(10.dp)
+                                            )
+                                        }
                                     },
-                                    color = Color.White,
-                                    fontSize = with(LocalDensity.current) {
-                                        16.dp.toSp()
-                                    },
-                                    textAlign = TextAlign.Center
-                                )
+                                    modifier = Modifier.weight(1.5F),
+                                    delayMillis = 300,  // 停留多久后才显示
+                                ) {
+                                    // 需要添加提示的组件
+                                    Text(
+                                        item.text,
+                                        modifier = Modifier.fillMaxWidth().pointerHoverIcon(PointerIcon.Hand)
+                                            .clickable {
+                                                toAdd(item.id)
+
+                                            },
+                                        color = Color.White,
+                                        fontSize = with(LocalDensity.current) {
+                                            16.dp.toSp()
+                                        },
+                                        textAlign = TextAlign.Left, maxLines = 1, overflow = TextOverflow.Ellipsis
+                                    )
+                                }
+
+                                Row(
+                                    modifier = Modifier.weight(0.05F),
+                                    verticalAlignment = Alignment.CenterVertically,
+                                    horizontalArrangement = Arrangement.Center
+                                ) {}
+                                Row(
+                                    modifier = Modifier.weight(0.1F),
+                                    verticalAlignment = Alignment.CenterVertically,
+                                    horizontalArrangement = Arrangement.Center
+                                ) {
+                                    Text(
+                                        "复制",
+                                        modifier = Modifier.pointerHoverIcon(PointerIcon.Hand).clickable {
+                                            serviceR?.run {
+                                                val info = infoMap[item.id]
+                                                info?.let { ifo ->
+                                                    infoMap[UUID.randomUUID().toString()] = ifo.copy().apply {
+                                                        name += UUID.randomUUID().toString().replace("-", "")
+                                                        sort = LocalDateTime.now()
+                                                            .format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"))
+                                                    }
+                                                    rowInfo = serviceR.run {
+                                                        infoMap.entries.sortedBy {
+                                                            LocalDateTime.from(
+                                                                DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")
+                                                                    .parse(it.value.sort)
+                                                            )
+                                                        }.reversed().map { (key, value) ->
+                                                            RowInfo().apply {
+                                                                text = value.name
+                                                                id = key
+                                                            }
+                                                        }.toMutableStateList()
+                                                    }
+
+                                                }
+
+                                            }
+
+                                        },
+                                        color = Color(0xFF3374f0),
+                                        fontSize = with(LocalDensity.current) {
+                                            13.dp.toSp()
+                                        },
+                                        textAlign = TextAlign.Center
+                                    )
+                                }
+
+                                Row(
+                                    modifier = Modifier.weight(0.1F),
+                                    verticalAlignment = Alignment.CenterVertically,
+                                    horizontalArrangement = Arrangement.Center
+                                ) {
+                                    Text(
+                                        "删除",
+                                        modifier = Modifier.pointerHoverIcon(PointerIcon.Hand).clickable {
+                                            serviceR?.run {
+                                                infoMap.remove(item.id)
+                                                rowInfo = serviceR.run {
+                                                    infoMap.entries
+                                                        .sortedBy {
+                                                            LocalDateTime.from(
+                                                                DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")
+                                                                    .parse(it.value.sort)
+                                                            )
+                                                        }.reversed().map { (key, value) ->
+                                                            RowInfo().apply {
+                                                                text = value.name
+                                                                id = key
+                                                            }
+                                                        }.toMutableStateList()
+                                                }
+
+                                            }
+                                        },
+                                        color = Color(0xFF3374f0),
+                                        fontSize = with(LocalDensity.current) {
+                                            13.dp.toSp()
+                                        },
+                                        textAlign = TextAlign.Center
+                                    )
+                                }
                             }
 
                         }

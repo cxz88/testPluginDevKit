@@ -56,10 +56,10 @@ fun Gen(project: Project?, service: MyService?, rowInfoList: String, function: (
             val c by animateColorAsState(
                 if (process == 1F) {
                     Color.Green
-                } else if (process < 1F) {
-                    Color.Red
-                } else {
+                } else if (process > 0F) {
                     Color(0xFF3374f0)
+                } else {
+                    Color.Red
                 }
             )
             LaunchedEffect(Unit) {

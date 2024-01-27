@@ -67,6 +67,7 @@ class BladeCodeGenerator {
                         }
                         //组装api的文件路径
                         val packageName = info.rearEndPackage.replace(".", "/")
+                        mutableSharedFlow.emit(SF.MsgHandler("正在构建", 0.5F))
                         try {
                             FastAutoGenerator.create(
                                 "jdbc:mysql://${info.url}:${info.port}/${info.dataBaseName}",
@@ -192,6 +193,7 @@ class BladeCodeGenerator {
 
                                     )
                                 consumer.customMap(map)
+
 
                             }.execute()
                             mutableSharedFlow.emit(SF.MsgHandler("构建成功", 1F))
