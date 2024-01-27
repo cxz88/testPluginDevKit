@@ -1,7 +1,7 @@
 <!-- Plugin Configuration File. Read more: https://plugins.jetbrains.com/docs/intellij/plugin-configuration-file.html -->
 <idea-plugin>
     <id>com.github.cxz88.testplugindevkit</id>
-    <name>TestPluginDevKit Template</name>
+    <name>fastGenCode</name>
     <vendor>cxz88</vendor>
     <depends>com.intellij.modules.platform</depends>
     <resource-bundle>messages.MyBundle</resource-bundle>

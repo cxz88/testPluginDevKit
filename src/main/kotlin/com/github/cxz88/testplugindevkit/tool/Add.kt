@@ -31,14 +31,19 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.intellij.openapi.fileChooser.FileChooser
+import com.intellij.openapi.fileChooser.FileChooserDescriptor
 import com.intellij.openapi.module.ModuleManager
 import com.intellij.openapi.project.Project
+import com.intellij.openapi.vfs.local.CoreLocalFileSystem
+import com.intellij.openapi.vfs.local.CoreLocalVirtualFile
+import java.nio.file.Path
 import java.util.*
-import javax.swing.JFileChooser
 import javax.swing.JOptionPane
 
 
 @Composable
+@Suppress("DuplicatedCode")
 fun Add(project: Project?, serviceR: MyService?, id: String? = null, toMain: (String?) -> Unit = {}) {
     val info: Info = if (serviceR != null) {
         serviceR.infoMap[id] ?: Info()
@@ -58,6 +63,7 @@ fun Add(project: Project?, serviceR: MyService?, id: String? = null, toMain: (St
     var name by remember { mutableStateOf(info.name) }
     var service by remember { mutableStateOf(info.service) }
     var `service-api` by remember { mutableStateOf(info.`service-api`) }
+    var mou by remember { mutableStateOf(info.mou) }
 
 
     Scaffold(
@@ -82,7 +88,7 @@ fun Add(project: Project?, serviceR: MyService?, id: String? = null, toMain: (St
                         contentPadding = PaddingValues(vertical = 0.dp, horizontal = 6.dp),
                         border = BorderStroke(0.1.dp, color = Color(0x22AFB1B3))
                     ) {
-                        Text("返回", fontSize = 13.sp, textAlign = TextAlign.Center, color = Color(0xFFd9dbdf))
+                        Text("返回", fontSize = 13.sp, textAlign = TextAlign.Center, color = Color.White)
                     }
                     Spacer(modifier = Modifier.width(10.dp))
                     TextButton(
@@ -220,6 +226,17 @@ fun Add(project: Project?, serviceR: MyService?, id: String? = null, toMain: (St
                                 return@la
 
                             }
+                            if (mou.isBlank()) {
+                                JOptionPane.showMessageDialog(
+                                    ComposeWindow(),
+                                    "模块不可为空",
+                                    "错误",
+                                    JOptionPane.ERROR_MESSAGE
+
+                                )
+                                return@la
+
+                            }
                             val info = Info(
                                 name,
                                 frontEndPackage,
@@ -231,32 +248,34 @@ fun Add(project: Project?, serviceR: MyService?, id: String? = null, toMain: (St
                                 dataBaseName,
                                 tableName,
                                 menuName,
-                                inheritTenant, service, `service-api`
+                                inheritTenant, service, `service-api`,mou
                             )
                             serviceR?.let { it.infoMap[id ?: UUID.randomUUID().toString()] = info }
                             toMain(null)
 
-                        }, colors = ButtonDefaults.buttonColors(backgroundColor = Color(0xFF3374f0),),
+                        }, colors = ButtonDefaults.buttonColors(backgroundColor = Color(0xFF3374f0)),
                         shape = RoundedCornerShape(8.dp),
                         modifier = Modifier.height(24.dp).width(42.dp),
                         contentPadding = PaddingValues(vertical = 0.dp, horizontal = 6.dp),
                         border = BorderStroke(0.1.dp, color = Color(0x22AFB1B3))
                     ) {
-                        Text("完成", fontSize = 13.sp, textAlign = TextAlign.Center, color = Color(0xFFd9dbdf))
+                        Text("完成", fontSize = 13.sp, textAlign = TextAlign.Center, color = Color.White)
                     }
                 }
             }
         },
         backgroundColor = Color.Transparent, contentColor = Color(0xFFAFB1B3),
-    ) {
+    ) { pdv ->
         Column(
             verticalArrangement = Arrangement.Center,
             horizontalAlignment = Alignment.CenterHorizontally,
-            modifier = Modifier.padding(it).fillMaxSize()
+            modifier = Modifier.padding(pdv).fillMaxSize()
         ) {
             Column(
                 Modifier.clip(RoundedCornerShape(5.dp))
                     .border(0.1.dp, Color(0x22AFB1B3), RoundedCornerShape(5.dp))
+                    .clip(RoundedCornerShape(5.dp))
+                    .background(Color(0xff2b2d30))
                     .padding(10.dp)
             ) {
                 Row(
@@ -274,7 +293,7 @@ fun Add(project: Project?, serviceR: MyService?, id: String? = null, toMain: (St
                             fontSize = 13.sp,
                             textAlign = TextAlign.Start,
                             fontWeight = W500,
-                            modifier = Modifier.weight(0.4F)
+                            modifier = Modifier.weight(0.4F), color = Color.White
                         )
                         Spacer(modifier = Modifier.weight(.1F))
 
@@ -291,7 +310,7 @@ fun Add(project: Project?, serviceR: MyService?, id: String? = null, toMain: (St
                                 .hoverable(remember { MutableInteractionSource() }, true)
                                 .pointerHoverIcon(PointerIcon.Text),
                             textStyle = TextStyle(
-                                color = Color(0xFFd9dbdf),
+                                color = Color.White,
                                 fontSize = with(LocalDensity.current) {
                                     14.dp.toSp()
                                 },
@@ -314,8 +333,10 @@ fun Add(project: Project?, serviceR: MyService?, id: String? = null, toMain: (St
             }
 
             Column(
-                modifier = Modifier.fillMaxSize().padding(top = 15.dp).clip(RoundedCornerShape(5.dp))
+                modifier = Modifier.fillMaxSize().padding(top = 15.dp)
                     .border(0.1.dp, Color(0x22AFB1B3), RoundedCornerShape(5.dp))
+                    .clip(RoundedCornerShape(5.dp))
+                    .background(Color(0xff2b2d30))
                     .padding(10.dp)
             ) {
                 Row(
@@ -333,10 +354,10 @@ fun Add(project: Project?, serviceR: MyService?, id: String? = null, toMain: (St
                             fontSize = 13.sp,
                             textAlign = TextAlign.Start,
                             fontWeight = W500,
-                            modifier = Modifier.weight(1.3F)
+                            modifier = Modifier.weight(1.3F), color = Color.White
                         )
                         Spacer(modifier = Modifier.weight(.1F))
-                        Select(project, true, modifier = Modifier.weight(2F),service) { v ->
+                        Select(project, true, modifier = Modifier.weight(2F), service) { v ->
                             service = v
                         }
                     }
@@ -351,7 +372,7 @@ fun Add(project: Project?, serviceR: MyService?, id: String? = null, toMain: (St
                             fontSize = 13.sp,
                             textAlign = TextAlign.Start,
                             fontWeight = W500,
-                            modifier = Modifier.weight(1.3F)
+                            modifier = Modifier.weight(1.3F), color = Color.White
                         )
                         Spacer(modifier = Modifier.weight(.1F))
                         Select(project, modifier = Modifier.weight(2F), c = `service-api`, param = { v ->
@@ -375,7 +396,7 @@ fun Add(project: Project?, serviceR: MyService?, id: String? = null, toMain: (St
                             fontSize = 13.sp,
                             textAlign = TextAlign.Start,
                             fontWeight = W500,
-                            modifier = Modifier.weight(1.3F)
+                            modifier = Modifier.weight(1.3F), color = Color.White
                         )
                         Spacer(modifier = Modifier.weight(.1F))
 
@@ -392,7 +413,7 @@ fun Add(project: Project?, serviceR: MyService?, id: String? = null, toMain: (St
                                 .hoverable(remember { MutableInteractionSource() }, true)
                                 .pointerHoverIcon(PointerIcon.Text),
                             textStyle = TextStyle(
-                                color = Color(0xFFd9dbdf),
+                                color = Color.White,
                                 fontSize = with(LocalDensity.current) {
                                     14.dp.toSp()
                                 },
@@ -421,7 +442,7 @@ fun Add(project: Project?, serviceR: MyService?, id: String? = null, toMain: (St
                             fontSize = 13.sp,
                             textAlign = TextAlign.Start,
                             fontWeight = W500,
-                            modifier = Modifier.weight(1.3F)
+                            modifier = Modifier.weight(1.3F), color = Color.White
                         )
                         Spacer(modifier = Modifier.weight(0.1F))
                         BasicTextField(
@@ -437,16 +458,27 @@ fun Add(project: Project?, serviceR: MyService?, id: String? = null, toMain: (St
                                 .hoverable(remember { MutableInteractionSource() }, true)
                                 .pointerHoverIcon(PointerIcon.Hand)
                                 .clickable {
-                                    JFileChooser(frontEndPackage).apply {
-                                        fileSelectionMode = JFileChooser.DIRECTORIES_ONLY
-                                        if (showOpenDialog(ComposeWindow()) == JFileChooser.APPROVE_OPTION) {
-                                            frontEndPackage = selectedFile.absolutePath
-                                        }
+
+                                    val f = CoreLocalVirtualFile(CoreLocalFileSystem(), Path.of(frontEndPackage))
+                                    FileChooser.chooseFile(
+                                        FileChooserDescriptor(false, true, false, false, false, false),
+                                        project,
+                                        f
+                                    ) { vf ->
+
+                                        frontEndPackage = vf.path
                                     }
+
+//                                    JFileChooser(frontEndPackage).apply {
+//                                        fileSelectionMode = JFileChooser.DIRECTORIES_ONLY
+//                                        if (showOpenDialog(ComposeWindow()) == JFileChooser.APPROVE_OPTION) {
+//                                            frontEndPackage = selectedFile.absolutePath
+//                                        }
+//                                    }
                                 },
 
                             textStyle = TextStyle(
-                                color = Color(0xFFd9dbdf),
+                                color = Color.White,
                                 fontSize = with(LocalDensity.current) {
                                     14.dp.toSp()
                                 },
@@ -478,7 +510,7 @@ fun Add(project: Project?, serviceR: MyService?, id: String? = null, toMain: (St
                             fontSize = 13.sp,
                             textAlign = TextAlign.Start,
                             fontWeight = W500,
-                            modifier = Modifier.weight(1.3F)
+                            modifier = Modifier.weight(1.3F),color = Color.White
                         )
                         Spacer(modifier = Modifier.weight(.1F))
 
@@ -495,7 +527,7 @@ fun Add(project: Project?, serviceR: MyService?, id: String? = null, toMain: (St
                                 .hoverable(remember { MutableInteractionSource() }, true)
                                 .pointerHoverIcon(PointerIcon.Text),
                             textStyle = TextStyle(
-                                color = Color(0xFFd9dbdf),
+                                color = Color.White,
                                 fontSize = with(LocalDensity.current) {
                                     14.dp.toSp()
                                 },
@@ -524,7 +556,7 @@ fun Add(project: Project?, serviceR: MyService?, id: String? = null, toMain: (St
                             fontSize = 13.sp,
                             textAlign = TextAlign.Start,
                             fontWeight = W500,
-                            modifier = Modifier.weight(1.3F)
+                            modifier = Modifier.weight(1.3F),color = Color.White
                         )
                         Spacer(modifier = Modifier.weight(0.1F))
                         BasicTextField(
@@ -540,7 +572,7 @@ fun Add(project: Project?, serviceR: MyService?, id: String? = null, toMain: (St
                                 .hoverable(remember { MutableInteractionSource() }, true)
                                 .pointerHoverIcon(PointerIcon.Text),
                             textStyle = TextStyle(
-                                color = Color(0xFFd9dbdf),
+                                color = Color.White,
                                 fontSize = with(LocalDensity.current) {
                                     14.dp.toSp()
                                 },
@@ -572,7 +604,7 @@ fun Add(project: Project?, serviceR: MyService?, id: String? = null, toMain: (St
                             fontSize = 13.sp,
                             textAlign = TextAlign.Start,
                             fontWeight = W500,
-                            modifier = Modifier.weight(1.3F)
+                            modifier = Modifier.weight(1.3F),color = Color.White
                         )
                         Spacer(modifier = Modifier.weight(.1F))
 
@@ -589,7 +621,7 @@ fun Add(project: Project?, serviceR: MyService?, id: String? = null, toMain: (St
                                 .hoverable(remember { MutableInteractionSource() }, true)
                                 .pointerHoverIcon(PointerIcon.Text),
                             textStyle = TextStyle(
-                                color = Color(0xFFd9dbdf),
+                                color = Color.White,
                                 fontSize = with(LocalDensity.current) {
                                     14.dp.toSp()
                                 },
@@ -618,7 +650,7 @@ fun Add(project: Project?, serviceR: MyService?, id: String? = null, toMain: (St
                             fontSize = 13.sp,
                             textAlign = TextAlign.Start,
                             fontWeight = W500,
-                            modifier = Modifier.weight(1.3F)
+                            modifier = Modifier.weight(1.3F),color = Color.White
                         )
                         Spacer(modifier = Modifier.weight(0.1F))
                         BasicTextField(
@@ -633,7 +665,7 @@ fun Add(project: Project?, serviceR: MyService?, id: String? = null, toMain: (St
                                 .hoverable(remember { MutableInteractionSource() }, true)
                                 .pointerHoverIcon(PointerIcon.Text),
                             textStyle = TextStyle(
-                                color = Color(0xFFd9dbdf),
+                                color = Color.White,
                                 fontSize = with(LocalDensity.current) {
                                     14.dp.toSp()
                                 },
@@ -667,7 +699,7 @@ fun Add(project: Project?, serviceR: MyService?, id: String? = null, toMain: (St
                             fontSize = 13.sp,
                             textAlign = TextAlign.Start,
                             fontWeight = W500,
-                            modifier = Modifier.weight(1.3F)
+                            modifier = Modifier.weight(1.3F),color = Color.White
                         )
                         Spacer(modifier = Modifier.weight(.1F))
 
@@ -684,7 +716,7 @@ fun Add(project: Project?, serviceR: MyService?, id: String? = null, toMain: (St
                                 .hoverable(remember { MutableInteractionSource() }, true)
                                 .pointerHoverIcon(PointerIcon.Text),
                             textStyle = TextStyle(
-                                color = Color(0xFFd9dbdf),
+                                color = Color.White,
                                 fontSize = with(LocalDensity.current) {
                                     14.dp.toSp()
                                 },
@@ -713,7 +745,7 @@ fun Add(project: Project?, serviceR: MyService?, id: String? = null, toMain: (St
                             fontSize = 13.sp,
                             textAlign = TextAlign.Start,
                             fontWeight = W500,
-                            modifier = Modifier.weight(1.3F)
+                            modifier = Modifier.weight(1.3F),color = Color.White
                         )
                         Spacer(modifier = Modifier.weight(0.1F))
                         BasicTextField(
@@ -728,7 +760,7 @@ fun Add(project: Project?, serviceR: MyService?, id: String? = null, toMain: (St
                                 .hoverable(remember { MutableInteractionSource() }, true)
                                 .pointerHoverIcon(PointerIcon.Text),
                             textStyle = TextStyle(
-                                color = Color(0xFFd9dbdf),
+                                color = Color.White,
                                 fontSize = with(LocalDensity.current) {
                                     14.dp.toSp()
                                 },
@@ -763,7 +795,7 @@ fun Add(project: Project?, serviceR: MyService?, id: String? = null, toMain: (St
                             fontSize = 13.sp,
                             textAlign = TextAlign.Start,
                             fontWeight = W500,
-                            modifier = Modifier.weight(1.3F)
+                            modifier = Modifier.weight(1.3F),color = Color.White
                         )
                         Spacer(modifier = Modifier.weight(.1F))
 
@@ -780,7 +812,7 @@ fun Add(project: Project?, serviceR: MyService?, id: String? = null, toMain: (St
                                 .hoverable(remember { MutableInteractionSource() }, true)
                                 .pointerHoverIcon(PointerIcon.Text),
                             textStyle = TextStyle(
-                                color = Color(0xFFd9dbdf),
+                                color = Color.White,
                                 fontSize = with(LocalDensity.current) {
                                     14.dp.toSp()
                                 },
@@ -809,7 +841,7 @@ fun Add(project: Project?, serviceR: MyService?, id: String? = null, toMain: (St
                             fontSize = 13.sp,
                             textAlign = TextAlign.Start,
                             fontWeight = W500,
-                            modifier = Modifier.weight(1.3F)
+                            modifier = Modifier.weight(1.3F),color = Color.White
                         )
                         Spacer(modifier = Modifier.weight(0.1F))
                         Row(
@@ -835,6 +867,65 @@ fun Add(project: Project?, serviceR: MyService?, id: String? = null, toMain: (St
                     }
 
                 }
+                Row(
+                    horizontalArrangement = Arrangement.SpaceAround,
+                    verticalAlignment = Alignment.CenterVertically,
+                    modifier = Modifier.fillMaxWidth().padding(top = 20.dp)
+                ) {
+                    Row(
+                        horizontalArrangement = Arrangement.Center,
+                        verticalAlignment = Alignment.CenterVertically,
+                        modifier = Modifier.fillMaxWidth().weight(1F)
+                    ) {
+                        Text(
+                            "模块名称",
+                            fontSize = 13.sp,
+                            textAlign = TextAlign.Start,
+                            fontWeight = W500,
+                            modifier = Modifier.weight(1.3F),color = Color.White
+                        )
+                        Spacer(modifier = Modifier.weight(.1F))
+
+                        //显示选中的文本
+                        BasicTextField(
+                            mou,
+                            onValueChange = {
+                                mou = it
+                            },
+                            readOnly = false,
+                            enabled = true,
+                            modifier = Modifier.weight(2F).height(28.dp).clip(RoundedCornerShape(5.dp))
+                                .background(Color(0xFF4C5052)).padding(horizontal = 10.dp)
+                                .hoverable(remember { MutableInteractionSource() }, true)
+                                .pointerHoverIcon(PointerIcon.Text),
+                            textStyle = TextStyle(
+                                color = Color.White,
+                                fontSize = with(LocalDensity.current) {
+                                    14.dp.toSp()
+                                },
+                                textAlign = TextAlign.Start,
+                            ), cursorBrush = SolidColor(Color.White), maxLines = 1, decorationBox = {
+                                Row(
+                                    horizontalArrangement = Arrangement.Start,
+                                    verticalAlignment = Alignment.CenterVertically,
+                                    modifier = Modifier.fillMaxSize()
+                                ) {
+                                    it()
+                                }
+                            }
+                        )
+
+
+                    }
+                    Spacer(modifier = Modifier.weight(0.1F))
+                    Row(
+                        horizontalArrangement = Arrangement.Center,
+                        verticalAlignment = Alignment.CenterVertically,
+                        modifier = Modifier.fillMaxWidth().weight(1F)
+                    ) {
+                    }
+
+                }
             }
 
         }
@@ -855,7 +946,7 @@ object NoIndication : Indication {
     }
 }
 
-class Props(private val project: Project?, private val isService: Boolean, param: (String) -> Unit,c:String) {
+class Props(private val project: Project?, private val isService: Boolean, param: (String) -> Unit, c: String) {
     var expanded = false
     val selectList: List<String>
         get() = project?.let { p ->
@@ -865,16 +956,16 @@ class Props(private val project: Project?, private val isService: Boolean, param
                 .toList()
         } ?: listOf("")
     var check: String by mutableStateOf(
-       c
+        c
     )
     lateinit var callBack: (String, Boolean) -> Unit
 }
 
 
 @Composable
-fun Select(project: Project?, isService: Boolean = false, modifier: Modifier,c: String, param: (String) -> Unit) {
+fun Select(project: Project?, isService: Boolean = false, modifier: Modifier, c: String, param: (String) -> Unit) {
     val props = remember(project) {
-        Props(project, isService, param,c)
+        Props(project, isService, param, c)
     }
 
     /**
@@ -935,7 +1026,7 @@ fun SelectedTextBox(props: Props) {
             .clickable {
                 props.check.let { props.callBack(it, true) }
             },
-        textStyle = TextStyle(color = Color(0xFFd9dbdf), fontSize = with(LocalDensity.current) {
+        textStyle = TextStyle(color = Color.White, fontSize = with(LocalDensity.current) {
             14.dp.toSp()
         }, textAlign = TextAlign.Left),
         decorationBox = { text ->
@@ -974,7 +1065,7 @@ fun SelectOption(props: Props) {
         }, modifier = Modifier.height(25.dp)) {
             Text(
                 it.trim(),
-                color = Color(0xFFd9dbdf),
+                color = Color.White,
                 textAlign = TextAlign.Left,
                 maxLines = 1,
                 overflow = TextOverflow.Ellipsis,

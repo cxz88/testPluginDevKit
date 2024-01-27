@@ -1,6 +1,6 @@
+
 import org.jetbrains.changelog.Changelog
 import org.jetbrains.changelog.markdownToHTML
-import org.jetbrains.compose.ExperimentalComposeLibrary
 
 fun properties(key: String) = providers.gradleProperty(key)
 fun environment(key: String) = providers.environmentVariable(key)
@@ -27,8 +27,20 @@ repositories {
 
 // Dependencies are managed with Gradle version catalog - read more: https://docs.gradle.org/current/userguide/platforms.html#sub:version-catalog
 dependencies {
-    implementation(compose.desktop.currentOs)
+    implementation(compose.desktop.macos_x64)
+    implementation(compose.desktop.macos_arm64)
+    implementation(compose.desktop.windows_x64)
+    implementation(compose.desktop.linux_x64)
+    implementation(compose.desktop.linux_arm64)
+
     implementation("moe.tlaster:precompose:1.5.10")
+    implementation ("com.baomidou:mybatis-plus-generator:3.5.5")
+    implementation ("com.baomidou:mybatis-plus-extension:3.5.5")
+    implementation ("com.baomidou:mybatis-plus-core:3.5.5")
+    implementation("org.slf4j:slf4j-simple:2.0.11")
+    implementation("com.mysql:mysql-connector-j:8.3.0")
+    implementation("org.apache.velocity:velocity-engine-core:2.3")
+
 }
 
 // Set the JVM language level used to build the project. Use Java 11 for 2020.3+, and Java 17 for 2022.2+.

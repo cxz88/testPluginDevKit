@@ -26,6 +26,7 @@ import moe.tlaster.precompose.navigation.transition.NavTransition
 sealed class Route(val route: String) {
     data object Main : Route("/mainRoute")
     data object Add : Route("/addRoute")
+    data object Gen : Route("/gen")
 
 }
 
@@ -51,13 +52,22 @@ fun NavApp(project: Project?) {
             }))
         }) {
         scene(Route.Main.route) {
-            App(project, service) {
+            App(project, service,{
+                rememberNavigator.navigate("${Route.Gen.route}/${it}")
+            }) {
                 rememberNavigator.navigate("${Route.Add.route}/${it ?: "0"}")
             }
         }
         scene("${Route.Add.route}/{id}") {
             Add(project, service, it.path<String>("id")) {
                 rememberNavigator.popBackStack()
+            }
+        }
+        scene("${Route.Gen.route}/{id}") {
+            it.path<String>("id")?.let { it1 ->
+                Gen(project, service, it1) {
+                    rememberNavigator.popBackStack()
+                }
             }
         }
     }

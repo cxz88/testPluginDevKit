@@ -39,7 +39,8 @@ data class Info(
     var menuName: String = "",
     var inheritTenant: Boolean = true,
     var service: String = "",
-    var `service-api`: String = ""
+    var `service-api`: String = "",
+    var mou: String = ""
 )
 
 
