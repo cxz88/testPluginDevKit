@@ -84,7 +84,7 @@ fun App(serviceR: MyService?, function: (String) -> Unit, toAdd: (String?) -> Un
                 TextButton(
                     onClick = {
                         rowInfo.let { ss ->
-                            ss.filter { it.check }.joinToString { it.id }.let {
+                            ss.filter { it.check }.joinToString(",") { it.id }.let {
                                 if (it.isNotEmpty()) {
                                     function(it)
                                 }
