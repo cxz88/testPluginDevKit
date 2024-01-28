@@ -12,8 +12,8 @@ import java.time.format.DateTimeFormatter
 
 @State(name = "cxz", storages = [Storage(value = "cxzProperty.xml")])
 @Service(Service.Level.PROJECT)
-object MyService : PersistentStateComponent<MyService> {
-    var infoMap: MutableMap<String, Info> = concurrentMapOf()
+class MyService(var infoMap: MutableMap<String, Info> = concurrentMapOf()) : PersistentStateComponent<MyService> {
+
 
     override fun getState(): MyService {
         return this
