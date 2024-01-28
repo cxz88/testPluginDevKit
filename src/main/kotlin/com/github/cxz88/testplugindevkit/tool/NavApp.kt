@@ -10,11 +10,9 @@ import androidx.compose.animation.slideOutHorizontally
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import com.intellij.openapi.project.Project
@@ -36,7 +34,7 @@ fun NavApp(project: Project?) {
     val service = project?.getService(MyService::class.java)
     NavHost(navigator = rememberNavigator,
         initialRoute = Route.Main.route,
-        modifier = Modifier.fillMaxSize().clip(RoundedCornerShape(10.dp)).background(color = Color.Transparent)
+        modifier = Modifier.fillMaxSize().background(color = Color(0xff2b2d30))
             .padding(10.dp).padding(horizontal = 15.dp),
         navTransition = remember {
             NavTransition(createTransition = slideInHorizontally(initialOffsetX = {

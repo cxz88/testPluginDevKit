@@ -250,7 +250,7 @@ fun Add(project: Project?, serviceR: MyService?, id: String? = null, toMain: (St
                                 menuName,
                                 inheritTenant, service, `service-api`, mou, info.sort
                             )
-                            serviceR?.let { it.infoMap[id ?: UUID.randomUUID().toString()] = info1 }
+                            serviceR?.let { it.infoMap[(if (id=="0") null else id) ?: UUID.randomUUID().toString()] = info1 }
                             toMain(null)
 
                         }, colors = ButtonDefaults.buttonColors(backgroundColor = Color(0xFF3374f0)),
