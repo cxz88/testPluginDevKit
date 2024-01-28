@@ -9,12 +9,11 @@ import com.jetbrains.rd.util.concurrentMapOf
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 
+
 @State(name = "cxz", storages = [Storage(value = "cxzProperty.xml")])
 @Service(Service.Level.PROJECT)
-class MyService(
+object MyService : PersistentStateComponent<MyService> {
     var infoMap: MutableMap<String, Info> = concurrentMapOf()
-) : PersistentStateComponent<MyService> {
-
 
     override fun getState(): MyService {
         return this

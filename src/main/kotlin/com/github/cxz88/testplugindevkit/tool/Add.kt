@@ -44,7 +44,7 @@ import javax.swing.JOptionPane
 
 @Composable
 @Suppress("DuplicatedCode")
-fun Add(project: Project?, serviceR: MyService?, id: String? = null, toMain: (String?) -> Unit = {}) {
+inline fun Add(project: Project?, serviceR: MyService?, id: String? = null, crossinline toMain: (String?) -> Unit = {}) {
     val info: Info = if (serviceR != null && id != null && id != "0") {
         serviceR.infoMap[id] ?: Info()
     } else {

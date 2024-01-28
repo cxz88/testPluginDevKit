@@ -33,7 +33,7 @@ import kotlinx.coroutines.withContext
 
 
 @Composable
-fun Gen(project: Project?, service: MyService?, rowInfoList: String, function: () -> Unit) {
+inline fun Gen(project: Project?, service: MyService?, rowInfoList: String, crossinline function: () -> Unit) {
     var msg by remember {
         mutableStateOf("正在构建")
     }
