@@ -44,7 +44,12 @@ import javax.swing.JOptionPane
 
 @Composable
 @Suppress("DuplicatedCode")
-inline fun Add(project: Project?, serviceR: MyService?, id: String? = null, crossinline toMain: (String?) -> Unit = {}) {
+inline fun Add(
+    project: Project?,
+    serviceR: MyService?,
+    id: String? = null,
+    crossinline toMain: (String?) -> Unit = {}
+) {
     val info: Info = if (serviceR != null && id != null && id != "0") {
         serviceR.infoMap[id] ?: Info()
     } else {
@@ -250,7 +255,9 @@ inline fun Add(project: Project?, serviceR: MyService?, id: String? = null, cros
                                 menuName,
                                 inheritTenant, service, `service-api`, mou, info.sort
                             )
-                            serviceR?.let { it.infoMap[(if (id=="0") null else id) ?: UUID.randomUUID().toString()] = info1 }
+                            serviceR?.let {
+                                it.infoMap[(if (id == "0") null else id) ?: UUID.randomUUID().toString()] = info1
+                            }
                             toMain(null)
 
                         }, colors = ButtonDefaults.buttonColors(backgroundColor = Color(0xFF3374f0)),
@@ -449,33 +456,13 @@ inline fun Add(project: Project?, serviceR: MyService?, id: String? = null, cros
 
                             frontEndPackage,
                             onValueChange = {
-
                             },
                             readOnly = true,
                             enabled = false,
                             modifier = Modifier.weight(2F).height(28.dp).clip(RoundedCornerShape(5.dp))
                                 .background(Color(0xFF4C5052)).padding(horizontal = 10.dp)
                                 .hoverable(remember { MutableInteractionSource() }, true)
-                                .pointerHoverIcon(PointerIcon.Hand)
-                                .clickable {
-
-                                    val f = CoreLocalVirtualFile(CoreLocalFileSystem(), Path.of(frontEndPackage))
-                                    FileChooser.chooseFile(
-                                        FileChooserDescriptor(false, true, false, false, false, false),
-                                        project,
-                                        f
-                                    ) { vf ->
-
-                                        frontEndPackage = vf.path
-                                    }
-
-//                                    JFileChooser(frontEndPackage).apply {
-//                                        fileSelectionMode = JFileChooser.DIRECTORIES_ONLY
-//                                        if (showOpenDialog(ComposeWindow()) == JFileChooser.APPROVE_OPTION) {
-//                                            frontEndPackage = selectedFile.absolutePath
-//                                        }
-//                                    }
-                                },
+                                .pointerHoverIcon(PointerIcon.Hand),
 
                             textStyle = TextStyle(
                                 color = Color.White,
@@ -487,7 +474,25 @@ inline fun Add(project: Project?, serviceR: MyService?, id: String? = null, cros
                                 Row(
                                     horizontalArrangement = Arrangement.Start,
                                     verticalAlignment = Alignment.CenterVertically,
-                                    modifier = Modifier.fillMaxSize()
+                                    modifier = Modifier.fillMaxSize().clickable {
+
+                                        val f = CoreLocalVirtualFile(CoreLocalFileSystem(), Path.of(frontEndPackage))
+                                        FileChooser.chooseFile(
+                                            FileChooserDescriptor(false, true, false, false, false, false),
+                                            project,
+                                            f
+                                        ) { vf ->
+
+                                            frontEndPackage = vf.path
+                                        }
+
+//                                    JFileChooser(frontEndPackage).apply {
+//                                        fileSelectionMode = JFileChooser.DIRECTORIES_ONLY
+//                                        if (showOpenDialog(ComposeWindow()) == JFileChooser.APPROVE_OPTION) {
+//                                            frontEndPackage = selectedFile.absolutePath
+//                                        }
+//                                    }
+                                    }
                                 ) {
                                     it()
                                 }
