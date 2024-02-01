@@ -16,7 +16,7 @@ import com.intellij.openapi.roots.ModuleRootManager
 import kotlinx.coroutines.flow.MutableSharedFlow
 
 
-class BladeCodeGenerator {
+object BladeCodeGenerator {
     private val SUPER_ENTITY_COLUMNS =
         listOf(
             "id",

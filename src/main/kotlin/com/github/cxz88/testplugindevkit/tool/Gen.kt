@@ -65,8 +65,7 @@ inline fun Gen(project: Project?, service: MyService?, rowInfoList: String, cros
             )
             LaunchedEffect(Unit) {
                 launch(Dispatchers.IO) {
-                    val bladeCodeGenerator = BladeCodeGenerator()
-                    bladeCodeGenerator.run(SF.mutableSharedFlow, rowInfoList.split(",").toList(), project, service)
+                    BladeCodeGenerator.run(SF.mutableSharedFlow, rowInfoList.split(",").toList(), project, service)
                 }
                 withContext(Dispatchers.IO) {
                     SF.mutableSharedFlow.collect {
