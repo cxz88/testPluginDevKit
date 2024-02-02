@@ -43,7 +43,7 @@ import java.util.*
 inline fun App(
     serviceR: MyService?,
     crossinline function: String.() -> Unit,
-    crossinline toAdd: (String?) -> Unit = {}
+    crossinline toAdd: String?.() -> Unit = {}
 ) {
     var rowInfo by remember {
         mutableStateOf(serviceR?.run {
@@ -65,7 +65,7 @@ inline fun App(
             Row {
                 TextButton(
                     onClick = {
-                        toAdd(null)
+                        null.toAdd()
                     },
                     colors = ButtonDefaults.buttonColors(backgroundColor = Color(0xFF3374f0)),
                     shape = RoundedCornerShape(8.dp),
@@ -232,7 +232,7 @@ inline fun App(
                                         item.text,
                                         modifier = Modifier.fillMaxWidth().pointerHoverIcon(PointerIcon.Hand)
                                             .clickable {
-                                                toAdd(item.id)
+                                                item.id.toAdd()
 
                                             },
                                         color = Color.White,
