@@ -139,7 +139,7 @@ object BladeCodeGenerator {
                                             }/${mou}",
                                             "serviceName" to service,
                                             "servicePackage" to mou,
-                                            "commonFields" to SUPER_ENTITY_COLUMNS.map { StringUtils.camelToUnderline(it) to it }
+                                            "commonFields" to SUPER_ENTITY_COLUMNS.map { it to StringUtils.underlineToCamel(it) }
 
                                         )
                                         with(consumer) {
