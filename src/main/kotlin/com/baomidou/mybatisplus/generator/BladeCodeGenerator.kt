@@ -34,18 +34,17 @@ object BladeCodeGenerator {
     ) {
 
         //获取模块
-        project?.let { p ->
-            val instance = ModuleManager.getInstance(p)
+        project?.apply {
+            val instance = ModuleManager.getInstance(this)
             val modules = instance.modules
             var pr = 0F
             val p1 = 1F / toList.size
             val p2 = p1 / 2
-            service?.let { sr ->
+            service?.apply {
                 try {
-                    toList.map { sr.infoMap[it] }
+                    toList.map { infoMap[it] }
                         .forEach { info ->
-                            info ?: throw Exception("无法获取到具体信息")
-                            info.run {
+                            (info ?: throw Exception("无法获取到具体信息")).apply {
                                 val find = modules.find {
                                     this.service == it.name
                                 }
@@ -67,29 +66,32 @@ object BladeCodeGenerator {
                                     roots.first().path
                                 }
                                 //组装api的文件路径
-                                val packageName = info.rearEndPackage.replace(".", "/")
+                                val packageName = rearEndPackage.replace(".", "/")
                                 pr += p2
                                 mutableSharedFlow.emit(SF.MsgHandler("正在构建", pr))
-
                                 FastAutoGenerator.create(
-                                    "jdbc:mysql://${info.url}:${info.port}/${info.dataBaseName}",
-                                    info.userName,
-                                    info.passWord
+                                    "jdbc:mysql://${url}:${port}/${dataBaseName}",
+                                    userName,
+                                    passWord
                                 ).globalConfig { builder ->
-                                    builder.author("大帅比") // 设置作者
-                                        .outputDir("$serviceApiPath")
-                                        .enableSwagger()
-                                        .disableOpenDir()
+                                    with(builder) {
+                                        author("大帅比") // 设置作者
+                                        outputDir("$serviceApiPath")
+                                        enableSwagger()
+                                        disableOpenDir()
+                                    }
+
                                 }.packageConfig { builder ->
-                                    builder
-                                        .parent(info.rearEndPackage)
-                                        .moduleName("")
-                                        .entity("entity.${info.mou}")
-                                        .service("service.${info.mou}")
-                                        .serviceImpl("service.impl.${info.mou}")
-                                        .mapper("mapper.${info.mou}")
-                                        .controller("controller.${info.mou}")
-                                        .pathInfo(
+
+                                    with(builder) {
+                                        parent(rearEndPackage)
+                                        moduleName("")
+                                        entity("entity.${mou}")
+                                        service("service.${mou}")
+                                        serviceImpl("service.impl.${mou}")
+                                        mapper("mapper.${mou}")
+                                        controller("controller.${mou}")
+                                        pathInfo(
                                             mapOf(
                                                 OutputFile.entity to "${serviceApiPath}/src/main/java/${packageName}/entity/${mou}",
                                                 OutputFile.xml to "${servicePath}/src/main/java/${packageName}/mapper/${mou}",
@@ -99,31 +101,33 @@ object BladeCodeGenerator {
                                                 OutputFile.controller to "${servicePath}/src/main/java/${packageName}/controller/${mou}",
                                             )
 
-                                        ) // 设置mapperXml生成路径
+                                        )
+                                    }
+
                                 }.strategyConfig { builder ->
-                                    builder.apply {
-                                        addInclude(info.tableName)
-                                    }
-                                    builder.entityBuilder().apply {
-                                        addSuperEntityColumns(SUPER_ENTITY_COLUMNS)
-                                        superClass("org.springblade.core.tenant.mp.TenantEntity")
-                                        enableLombok()
-                                        enableFileOverride()
-                                    }
-                                    builder.serviceBuilder().apply {
-                                        superServiceClass("org.springblade.core.mp.base.BaseService")
-                                        superServiceImplClass("org.springblade.core.mp.base.BaseServiceImpl")
-                                        enableFileOverride()
-                                    }
-                                    builder.controllerBuilder().apply {
-                                        superClass("org.springblade.core.boot.ctrl.BladeController")
-                                        enableFileOverride()
-                                    }
-                                    builder.mapperBuilder().apply {
-                                        enableFileOverride()
+                                    with(builder) {
+                                        addInclude(tableName)
+                                        with(entityBuilder()) {
+                                            addSuperEntityColumns(SUPER_ENTITY_COLUMNS)
+                                            superClass("org.springblade.core.tenant.mp.TenantEntity")
+                                            enableLombok()
+                                            enableFileOverride()
+                                        }
+                                        with(serviceBuilder()) {
+                                            superServiceClass("org.springblade.core.mp.base.BaseService")
+                                            superServiceImplClass("org.springblade.core.mp.base.BaseServiceImpl")
+                                            enableFileOverride()
+                                        }
+                                        with(controllerBuilder()) {
+                                            superClass("org.springblade.core.boot.ctrl.BladeController")
+                                            enableFileOverride()
+                                        }
+                                        with(mapperBuilder()) {
+                                            enableFileOverride()
+                                        }
                                     }
                                 }.templateConfig { template ->
-                                    template.apply {
+                                    with(template) {
                                         controller("templates/mom/controller.java.vm")
                                         xml("templates/mom/mapper.xml.vm")
                                         mapper("templates/mom/mapper.java.vm")
@@ -133,70 +137,72 @@ object BladeCodeGenerator {
                                     }
                                 }.injectionConfig { consumer ->
                                     val map = mutableMapOf(
-                                        "codeName" to info.menuName,
+                                        "codeName" to menuName,
                                         "servicePackageLowerCase" to "${
-                                            info.rearEndPackage.split(".").last()
-                                        }/${info.mou}",
-                                        "serviceName" to info.service,
-                                        "servicePackage" to info.mou,
+                                            rearEndPackage.split(".").last()
+                                        }/${mou}",
+                                        "serviceName" to service,
+                                        "servicePackage" to mou,
                                         "commonFields" to SUPER_ENTITY_COLUMNS.map { StringUtils.camelToUnderline(it) to it }
 
                                     )
-                                    consumer.beforeOutputFile { biConsumer, _ ->
-                                        map["entityKey"] = biConsumer.name
-                                        map["menuId"] = IdWorker.getId()
-                                        map["addMenuId"] = IdWorker.getId()
-                                        map["removeMenuId"] = IdWorker.getId()
-                                        map["viewMenuId"] = IdWorker.getId()
-                                        map["editMenuId"] = IdWorker.getId()
+                                    with(consumer) {
+                                        beforeOutputFile { biConsumer, _ ->
+                                            map["entityKey"] = biConsumer.name
+                                            map["menuId"] = IdWorker.getId()
+                                            map["addMenuId"] = IdWorker.getId()
+                                            map["removeMenuId"] = IdWorker.getId()
+                                            map["viewMenuId"] = IdWorker.getId()
+                                            map["editMenuId"] = IdWorker.getId()
+                                        }
+                                        customFile(
+                                            listOf(
+                                                CustomFile.Builder().filePath(
+                                                    "${frontEndPackage}/src/view/${
+                                                        rearEndPackage.split(".").last()
+                                                    }/${mou}"
+                                                )
+                                                    .templatePath("templates/saber/crud.vue.vm")
+                                                    .formatNameFunction { it.name }
+                                                    .fileName(".vue")
+                                                    .enableFileOverride()
+                                                    .build(),
+                                                CustomFile.Builder().filePath(
+                                                    "${frontEndPackage}/src/api/${
+                                                        rearEndPackage.split(".").last()
+                                                    }/${mou}"
+                                                )
+                                                    .templatePath("templates/saber/api.js.vm")
+                                                    .formatNameFunction { it.name }
+                                                    .enableFileOverride()
+                                                    .fileName(".js")
+                                                    .build(),
+                                                CustomFile.Builder().filePath("${servicePath}/src/main/java/sql/${mou}")
+                                                    .templatePath("templates/sql/menu.sql.vm")
+                                                    .formatNameFunction { it.name }
+                                                    .enableFileOverride()
+                                                    .fileName(".sql")
+                                                    .build(),
+                                                CustomFile.Builder()
+                                                    .filePath("${serviceApiPath}/src/main/java/${packageName}/dto/${mou}")
+                                                    .templatePath("templates/mom/entityDTO.java.vm")
+                                                    .formatNameFunction { it.entityName }
+                                                    .enableFileOverride()
+                                                    .fileName("DTO.java")
+                                                    .build(),
+                                                CustomFile.Builder()
+                                                    .filePath("${serviceApiPath}/src/main/java/${packageName}/vo/${mou}")
+                                                    .templatePath("templates/mom/entityVO.java.vm")
+                                                    .formatNameFunction { it.entityName }
+                                                    .enableFileOverride()
+                                                    .fileName("VO.java")
+                                                    .build()
+
+                                            ),
+
+                                            )
+                                        customMap(map)
                                     }
-                                    consumer.customFile(
-                                        listOf(
-                                            CustomFile.Builder().filePath(
-                                                "${info.frontEndPackage}/src/view/${
-                                                    info.rearEndPackage.split(".").last()
-                                                }/${mou}"
-                                            )
-                                                .templatePath("templates/saber/crud.vue.vm")
-                                                .formatNameFunction { it.name }
-                                                .fileName(".vue")
-                                                .enableFileOverride()
-                                                .build(),
-                                            CustomFile.Builder().filePath(
-                                                "${info.frontEndPackage}/src/api/${
-                                                    info.rearEndPackage.split(".").last()
-                                                }/${mou}"
-                                            )
-                                                .templatePath("templates/saber/api.js.vm")
-                                                .formatNameFunction { it.name }
-                                                .enableFileOverride()
-                                                .fileName(".js")
-                                                .build(),
-                                            CustomFile.Builder().filePath("${servicePath}/src/main/java/sql/${mou}")
-                                                .templatePath("templates/sql/menu.sql.vm")
-                                                .formatNameFunction { it.name }
-                                                .enableFileOverride()
-                                                .fileName(".sql")
-                                                .build(),
-                                            CustomFile.Builder()
-                                                .filePath("${serviceApiPath}/src/main/java/${packageName}/dto/${mou}")
-                                                .templatePath("templates/mom/entityDTO.java.vm")
-                                                .formatNameFunction { it.entityName }
-                                                .enableFileOverride()
-                                                .fileName("DTO.java")
-                                                .build(),
-                                            CustomFile.Builder()
-                                                .filePath("${serviceApiPath}/src/main/java/${packageName}/vo/${mou}")
-                                                .templatePath("templates/mom/entityVO.java.vm")
-                                                .formatNameFunction { it.entityName }
-                                                .enableFileOverride()
-                                                .fileName("VO.java")
-                                                .build()
-
-                                        ),
-
-                                        )
-                                    consumer.customMap(map)
 
 
                                 }.execute()
