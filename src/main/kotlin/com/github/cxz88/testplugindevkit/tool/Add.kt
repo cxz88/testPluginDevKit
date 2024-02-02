@@ -50,11 +50,15 @@ inline fun Add(
     id: String? = null,
     crossinline toMain: (String?) -> Unit = {}
 ) {
-    val info: Info = if (serviceR != null && id != null && id != "0") {
-        serviceR.infoMap[id] ?: Info()
-    } else {
-        Info()
-    }
+    val info: Info = id?.let {
+        serviceR?.run {
+            if (it != "0") {
+                infoMap[it]
+            } else {
+                null
+            }
+        }
+    } ?: Info()
     var frontEndPackage by remember { mutableStateOf(info.frontEndPackage) }
     var rearEndPackage by remember { mutableStateOf(info.rearEndPackage) }
     var url by remember { mutableStateOf(info.url) }
@@ -242,21 +246,20 @@ inline fun Add(
                                 return@la
 
                             }
-                            val info1 = Info(
-                                name,
-                                frontEndPackage,
-                                rearEndPackage,
-                                url,
-                                port,
-                                userName,
-                                passWord,
-                                dataBaseName,
-                                tableName,
-                                menuName,
-                                inheritTenant, service, `service-api`, mou, info.sort
-                            )
-                            serviceR?.let {
-                                it.infoMap[(if (id == "0") null else id) ?: UUID.randomUUID().toString()] = info1
+                            serviceR?.apply {
+                                infoMap[(if (id == "0") null else id) ?: UUID.randomUUID().toString()] = Info(
+                                    name,
+                                    frontEndPackage,
+                                    rearEndPackage,
+                                    url,
+                                    port,
+                                    userName,
+                                    passWord,
+                                    dataBaseName,
+                                    tableName,
+                                    menuName,
+                                    inheritTenant, service, `service-api`, mou, info.sort
+                                )
                             }
                             toMain(null)
 
@@ -485,13 +488,6 @@ inline fun Add(
 
                                             frontEndPackage = vf.path
                                         }
-
-//                                    JFileChooser(frontEndPackage).apply {
-//                                        fileSelectionMode = JFileChooser.DIRECTORIES_ONLY
-//                                        if (showOpenDialog(ComposeWindow()) == JFileChooser.APPROVE_OPTION) {
-//                                            frontEndPackage = selectedFile.absolutePath
-//                                        }
-//                                    }
                                     }
                                 ) {
                                     it()

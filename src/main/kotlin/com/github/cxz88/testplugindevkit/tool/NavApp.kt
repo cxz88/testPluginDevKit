@@ -62,8 +62,8 @@ fun NavApp(project: Project?) {
             }
         }
         scene("${Route.Gen.route}/{id}") {
-            it.path<String>("id")?.let { it1 ->
-                Gen(project, service, it1) {
+            it.path<String>("id")?.let { id ->
+                Gen(project, service, id) {
                     rememberNavigator.popBackStack()
                 }
             }
