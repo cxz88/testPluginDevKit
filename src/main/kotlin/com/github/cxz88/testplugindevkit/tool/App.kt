@@ -40,7 +40,11 @@ import java.util.*
 @Suppress("DuplicatedCode")
 @OptIn(ExperimentalComposeUiApi::class, ExperimentalFoundationApi::class)
 @Composable
-inline fun App(serviceR: MyService?, crossinline function: (String) -> Unit, crossinline toAdd: (String?) -> Unit = {}) {
+inline fun App(
+    serviceR: MyService?,
+    crossinline function: String.() -> Unit,
+    crossinline toAdd: (String?) -> Unit = {}
+) {
     var rowInfo by remember {
         mutableStateOf(serviceR?.run {
             infoMap.entries.sortedBy {
@@ -86,7 +90,7 @@ inline fun App(serviceR: MyService?, crossinline function: (String) -> Unit, cro
                         rowInfo.let { ss ->
                             ss.filter { it.check }.joinToString(",") { it.id }.let {
                                 if (it.isNotEmpty()) {
-                                    function(it)
+                                    it.function()
                                 }
                             }
                         }

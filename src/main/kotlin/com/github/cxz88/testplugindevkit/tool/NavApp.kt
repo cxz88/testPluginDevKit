@@ -51,7 +51,7 @@ fun NavApp(project: Project?) {
         }) {
         scene(Route.Main.route) {
             App(service, {
-                rememberNavigator.navigate("${Route.Gen.route}/${it}")
+                rememberNavigator.navigate("${Route.Gen.route}/$this")
             }) {
                 rememberNavigator.navigate("${Route.Add.route}/${it ?: "0"}")
             }
