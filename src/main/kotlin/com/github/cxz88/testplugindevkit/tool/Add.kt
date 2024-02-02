@@ -985,7 +985,9 @@ fun Select(project: Project?, isService: Boolean = false, modifier: Modifier, c:
         Row(
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.Center,
-            modifier = Modifier.fillMaxWidth()
+            modifier = Modifier.fillMaxWidth().clickable {
+                props.check.let { props.callBack(it, true) }
+            }
         ) {
             SelectedTextBox(prop)
         }
@@ -1024,9 +1026,7 @@ fun SelectedTextBox(props: Props) {
         modifier = Modifier.height(28.dp).fillMaxWidth().clip(RoundedCornerShape(5.dp))
             .background(Color(0xFF4C5052)).hoverable(remember { MutableInteractionSource() }, true)
             .pointerHoverIcon(PointerIcon.Default)
-            .clickable {
-                props.check.let { props.callBack(it, true) }
-            },
+            ,
         textStyle = TextStyle(color = Color.White, fontSize = with(LocalDensity.current) {
             14.dp.toSp()
         }, textAlign = TextAlign.Left),
