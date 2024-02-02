@@ -30,7 +30,7 @@ object BladeCodeGenerator {
         mutableSharedFlow: MutableSharedFlow<SF.MsgHandler>,
         toList: List<String>,
         project: Project?,
-        service: MyService?
+        serviceY: MyService?
     ) {
 
         //获取模块
@@ -40,7 +40,7 @@ object BladeCodeGenerator {
             var pr = 0F
             val p1 = 1F / toList.size
             val p2 = p1 / 2
-            service?.apply {
+            serviceY?.apply {
                 try {
                     toList.map { infoMap[it] }
                         .forEach { info ->
