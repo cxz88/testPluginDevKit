@@ -31,6 +31,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.compose.ui.zIndex
 import com.intellij.openapi.fileChooser.FileChooser
 import com.intellij.openapi.fileChooser.FileChooserDescriptor
 import com.intellij.openapi.module.ModuleManager
@@ -859,9 +860,11 @@ inline fun Add(
                                     onCheckedChange = {
                                         inheritTenant = it
                                     },
+                                    enabled = false,
                                     modifier = Modifier.fillMaxWidth(0.3F).height(28.dp),
                                     colors = SwitchDefaults.colors(checkedThumbColor = Color(0xFF3374f0))
                                 )
+
                             }
 
                         }
@@ -985,9 +988,7 @@ fun Select(project: Project?, isService: Boolean = false, modifier: Modifier, c:
         Row(
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.Center,
-            modifier = Modifier.fillMaxWidth().clickable {
-                props.check.let { props.callBack(it, true) }
-            }
+            modifier = Modifier.fillMaxWidth()
         ) {
             SelectedTextBox(prop)
         }
@@ -1034,7 +1035,9 @@ fun SelectedTextBox(props: Props) {
             Row(
                 horizontalArrangement = Arrangement.Center,
                 verticalAlignment = Alignment.CenterVertically,
-                modifier = Modifier.fillMaxWidth().pointerHoverIcon(PointerIcon.Default)
+                modifier = Modifier.zIndex(Float.MAX_VALUE).fillMaxWidth().pointerHoverIcon(PointerIcon.Default).clickable {
+                    props.check.let { props.callBack(it, true) }
+                }
             ) {
                 Row(
                     modifier = Modifier.padding(horizontal = 9.dp).weight(1F).pointerHoverIcon(PointerIcon.Default),
@@ -1047,7 +1050,7 @@ fun SelectedTextBox(props: Props) {
                     imageVector = Icons.Default.ArrowDropDown,
                     "",
                     tint = Color(0xFFAFB1B3),
-                    modifier = Modifier.padding(top = 5.dp).size(20.dp).weight(0.2F)
+                    modifier = Modifier.padding(top = 4.dp).size(20.dp).weight(0.2F)
                         .pointerHoverIcon(PointerIcon.Default)
                 )
             }
