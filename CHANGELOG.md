@@ -1,5 +1,7 @@
 <!-- Keep a Changelog guide -> https://keepachangelog.com -->
 
-# 快速生成springblade代码
+# fastGenCode Changelog
 
+## [Unreleased]
+### 
 - 首次发布
