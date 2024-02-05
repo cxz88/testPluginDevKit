@@ -1,7 +1,5 @@
 <!-- Keep a Changelog guide -> https://keepachangelog.com -->
 
-# testPluginDevKit Changelog
+# 快速生成springblade代码
 
-## [Unreleased]
-### Added
-- Initial scaffold created from [IntelliJ Platform Plugin Template](https://github.com/JetBrains/intellij-platform-plugin-template)
+- 首次发布
