@@ -429,7 +429,7 @@ inline fun Add(
                                     14.dp.toSp()
                                 },
                                 textAlign = TextAlign.Start,
-                            ), cursorBrush = SolidColor(Color.White), maxLines = 1, decorationBox = {
+                            ), cursorBrush = SolidColor(Color.White), maxLines = 1, singleLine = true, decorationBox = {
                                 Row(
                                     horizontalArrangement = Arrangement.Start,
                                     verticalAlignment = Alignment.CenterVertically,
@@ -534,7 +534,7 @@ inline fun Add(
                                     14.dp.toSp()
                                 },
                                 textAlign = TextAlign.Start,
-                            ), cursorBrush = SolidColor(Color.White), maxLines = 1, decorationBox = {
+                            ), cursorBrush = SolidColor(Color.White),singleLine = true, maxLines = 1, decorationBox = {
                                 Row(
                                     horizontalArrangement = Arrangement.Start,
                                     verticalAlignment = Alignment.CenterVertically,
@@ -579,7 +579,7 @@ inline fun Add(
                                     14.dp.toSp()
                                 },
                                 textAlign = TextAlign.Start,
-                            ), cursorBrush = SolidColor(Color.White), maxLines = 1, decorationBox = {
+                            ), cursorBrush = SolidColor(Color.White), maxLines = 1,singleLine = true, decorationBox = {
                                 Row(
                                     horizontalArrangement = Arrangement.Start,
                                     verticalAlignment = Alignment.CenterVertically,
@@ -628,7 +628,7 @@ inline fun Add(
                                     14.dp.toSp()
                                 },
                                 textAlign = TextAlign.Start,
-                            ), cursorBrush = SolidColor(Color.White), maxLines = 1, decorationBox = {
+                            ), cursorBrush = SolidColor(Color.White), maxLines = 1,singleLine = true, decorationBox = {
                                 Row(
                                     horizontalArrangement = Arrangement.Start,
                                     verticalAlignment = Alignment.CenterVertically,
@@ -673,7 +673,7 @@ inline fun Add(
                                 },
                                 textAlign = TextAlign.Start,
                             ), cursorBrush = SolidColor(Color.White),
-
+                            singleLine = true,
                             maxLines = 1, decorationBox = {
                                 Row(
                                     horizontalArrangement = Arrangement.Start,
@@ -723,7 +723,7 @@ inline fun Add(
                                     14.dp.toSp()
                                 },
                                 textAlign = TextAlign.Start,
-                            ), cursorBrush = SolidColor(Color.White), maxLines = 1, decorationBox = {
+                            ), cursorBrush = SolidColor(Color.White), maxLines = 1,singleLine = true, decorationBox = {
                                 Row(
                                     horizontalArrangement = Arrangement.Start,
                                     verticalAlignment = Alignment.CenterVertically,
@@ -769,7 +769,7 @@ inline fun Add(
                                 textAlign = TextAlign.Start,
                             ), cursorBrush = SolidColor(Color.White),
 
-                            maxLines = 1, decorationBox = {
+                            maxLines = 1,singleLine = true, decorationBox = {
                                 Row(
                                     horizontalArrangement = Arrangement.Start,
                                     verticalAlignment = Alignment.CenterVertically,
@@ -819,7 +819,7 @@ inline fun Add(
                                     14.dp.toSp()
                                 },
                                 textAlign = TextAlign.Start,
-                            ), cursorBrush = SolidColor(Color.White), maxLines = 1, decorationBox = {
+                            ), cursorBrush = SolidColor(Color.White), maxLines = 1,singleLine = true, decorationBox = {
                                 Row(
                                     horizontalArrangement = Arrangement.Start,
                                     verticalAlignment = Alignment.CenterVertically,
@@ -908,7 +908,7 @@ inline fun Add(
                                     14.dp.toSp()
                                 },
                                 textAlign = TextAlign.Start,
-                            ), cursorBrush = SolidColor(Color.White), maxLines = 1, decorationBox = {
+                            ), cursorBrush = SolidColor(Color.White), maxLines = 1,singleLine = true, decorationBox = {
                                 Row(
                                     horizontalArrangement = Arrangement.Start,
                                     verticalAlignment = Alignment.CenterVertically,
