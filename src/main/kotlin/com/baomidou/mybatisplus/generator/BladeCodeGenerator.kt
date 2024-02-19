@@ -46,13 +46,13 @@ object BladeCodeGenerator {
                         .forEach { info ->
                             (info ?: throw Exception("无法获取到具体信息")).apply {
                                 val find = modules.find {
-                                    this.service == it.name
+                                    service == it.name
                                 }
                                 val servicePath = find?.run {
                                     ModuleRootManager.getInstance(this).contentRoots.first().path
                                 }
                                 val find1 = modules.find {
-                                    this.`service-api` == it.name
+                                    `service-api` == it.name
                                 }
                                 val serviceApiPath = find1?.run {
                                     ModuleRootManager.getInstance(this).contentRoots.first().path
