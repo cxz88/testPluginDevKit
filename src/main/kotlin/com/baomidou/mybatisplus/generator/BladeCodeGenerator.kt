@@ -30,8 +30,10 @@ object BladeCodeGenerator {
         mutableSharedFlow: MutableSharedFlow<SF.MsgHandler>,
         toList: List<String>,
         project: Project?,
-        serviceY: MyService?
-    ) {
+        serviceY: MyService?,
+
+
+        ) {
 
         //获取模块
         project?.apply {
@@ -101,6 +103,10 @@ object BladeCodeGenerator {
                                     strategyConfig { builder ->
                                         with(builder) {
                                             addInclude(tableName)
+                                            val first = tableName.split("_").first()
+                                            if (first != tableName) {
+                                                addTablePrefix(first)
+                                            }
                                             with(entityBuilder()) {
                                                 addSuperEntityColumns(SUPER_ENTITY_COLUMNS)
                                                 superClass("org.springblade.core.tenant.mp.TenantEntity")
@@ -118,6 +124,7 @@ object BladeCodeGenerator {
                                             }
                                             with(mapperBuilder()) {
                                                 enableFileOverride()
+
                                             }
                                         }
                                     }
@@ -139,7 +146,11 @@ object BladeCodeGenerator {
                                             }/${mou}",
                                             "serviceName" to service,
                                             "servicePackage" to mou,
-                                            "commonFields" to SUPER_ENTITY_COLUMNS.map { it to StringUtils.underlineToCamel(it) }
+                                            "commonFields" to SUPER_ENTITY_COLUMNS.map {
+                                                it to StringUtils.underlineToCamel(
+                                                    it
+                                                )
+                                            }
 
                                         )
                                         with(consumer) {

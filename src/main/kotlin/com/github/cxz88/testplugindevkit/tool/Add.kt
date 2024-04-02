@@ -956,7 +956,7 @@ class Props(private val project: Project?, private val isService: Boolean, param
         get() = project?.let { p ->
             val instance = ModuleManager.getInstance(p)
             val modules = instance.modules
-            modules.map { it.name }.filter { if (isService) it.endsWith("service") else it.endsWith("api") }
+            modules.map { it.name }.filter { if (isService) !it.endsWith("api") else it.endsWith("api") }
                 .toList()
         } ?: listOf("")
     var check: String by mutableStateOf(
