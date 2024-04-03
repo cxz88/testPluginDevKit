@@ -20,17 +20,16 @@ class GAction : AnAction() {
 
     }
 
-    class SampleDialog(private val project: Project?) : DialogWrapper(project) {
+    class SampleDialog(private val project: Project?) : DialogWrapper(project, false, IdeModalityType.MODELESS) {
 
         init {
             title = "生成代码"
-            isResizable = false
+            isResizable = true
             init()
         }
 
         override fun createCenterPanel(): JComponent {
             setSize(1000, 600)
-
             return ComposePanel().apply {
                 setContent {
                     MaterialTheme(colors = darkColors(surface = Color.Transparent, background = Color.Transparent)) {
