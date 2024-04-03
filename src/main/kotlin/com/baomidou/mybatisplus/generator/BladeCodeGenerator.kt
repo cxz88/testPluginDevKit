@@ -52,12 +52,12 @@ object BladeCodeGenerator {
                         .forEach { info ->
                             (info ?: throw Exception("无法获取到具体信息")).apply {
                                 //检查数据库连接
-                                val url = "jdbc:mysql://${url}:${port}/${dataBaseName}"
+                                val url = "jdbc:mysql://$url:$port/$dataBaseName"
                                 try {
                                     DriverManager.getConnection(url, userName, passWord).use {
                                     }
                                 } catch (e: Exception) {
-                                    mutableSharedFlow.emit(SF.MsgHandler("构建失败:数据库连接失败", -1F))
+                                    mutableSharedFlow.emit(SF.MsgHandler("构建失败:数据库${dataBaseName}连接失败", -1F))
                                     return@re
                                 }
                                 val find = modules.find {
