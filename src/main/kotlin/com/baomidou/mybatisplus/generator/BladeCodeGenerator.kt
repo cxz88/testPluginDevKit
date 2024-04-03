@@ -10,6 +10,7 @@ import com.intellij.openapi.module.ModuleManager
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.roots.ModuleRootManager
 import kotlinx.coroutines.flow.MutableSharedFlow
+import java.sql.DriverManager
 
 
 object BladeCodeGenerator {
@@ -34,9 +35,12 @@ object BladeCodeGenerator {
 
 
         ) {
-
+        val driver1 = "com.mysql.jdbc.Driver"
+        val driver2 = "com.mysql.cj.jdbc.Driver"
+        Class.forName(driver2)
+        Class.forName(driver1)
         //获取模块
-        project?.apply {
+        project?.apply re@{
             val instance = ModuleManager.getInstance(this)
             val modules = instance.modules
             var pr = 0F
@@ -47,6 +51,15 @@ object BladeCodeGenerator {
                     toList.map { infoMap[it] }
                         .forEach { info ->
                             (info ?: throw Exception("无法获取到具体信息")).apply {
+                                //检查数据库连接
+                                val url = "jdbc:mysql://${url}:${port}/${dataBaseName}"
+                                try {
+                                    DriverManager.getConnection(url, userName, passWord).use {
+                                    }
+                                } catch (e: Exception) {
+                                    mutableSharedFlow.emit(SF.MsgHandler("构建失败:数据库连接失败", -1F))
+                                    return@re
+                                }
                                 val find = modules.find {
                                     service == it.name
                                 }
@@ -64,7 +77,7 @@ object BladeCodeGenerator {
                                 pr += p2
                                 mutableSharedFlow.emit(SF.MsgHandler("正在构建", pr))
                                 FastAutoGenerator.create(
-                                    "jdbc:mysql://${url}:${port}/${dataBaseName}",
+                                    url,
                                     userName,
                                     passWord
                                 ).run {
@@ -223,6 +236,7 @@ object BladeCodeGenerator {
                         }
                 } catch (e: Exception) {
                     mutableSharedFlow.emit(SF.MsgHandler("构建失败:${e.message}", -1F))
+                    return@re
                 }
                 mutableSharedFlow.emit(SF.MsgHandler("构建成功", 1F))
 
