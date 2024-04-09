@@ -12,7 +12,7 @@ plugins {
     alias(libs.plugins.changelog) // Gradle Changelog Plugin
     alias(libs.plugins.qodana) // Gradle Qodana Plugin
     alias(libs.plugins.kover) // Gradle Kover Plugin
-    id("org.jetbrains.compose") version "1.6.0-beta01"
+    id("org.jetbrains.compose") version "1.6.10-dev1571"
 }
 
 group = properties("pluginGroup").get()
