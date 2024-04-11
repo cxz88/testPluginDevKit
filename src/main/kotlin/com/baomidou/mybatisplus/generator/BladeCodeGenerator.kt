@@ -9,8 +9,10 @@ import com.github.cxz88.testplugindevkit.tool.SF
 import com.intellij.openapi.module.ModuleManager
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.roots.ModuleRootManager
+import com.intellij.openapi.vfs.LocalFileSystem
 import kotlinx.coroutines.flow.MutableSharedFlow
 import java.sql.DriverManager
+import java.util.*
 
 
 object BladeCodeGenerator {
@@ -83,7 +85,7 @@ object BladeCodeGenerator {
                                 ).run {
                                     globalConfig { builder ->
                                         with(builder) {
-                                            author("大帅比") // 设置作者
+                                            author("system")
                                             outputDir("$serviceApiPath")
                                             enableSwagger()
                                             disableOpenDir()
@@ -166,9 +168,19 @@ object BladeCodeGenerator {
                                             }
 
                                         )
+
                                         with(consumer) {
+                                            val pre = rearEndPackage.split(".").last()
                                             beforeOutputFile { biConsumer, _ ->
-                                                map["entityKey"] = biConsumer.name
+                                                val entityName = biConsumer.entityName
+                                                map["entityKey"] = entityName.lowercase(Locale.getDefault())
+                                                map["entityKeyCase"] = try {
+                                                    entityName.first()
+                                                        .lowercase(Locale.getDefault()) + entityName.substring(1)
+                                                } catch (e: Exception) {
+                                                    entityName.lowercase(Locale.getDefault())
+                                                }
+                                                map["pre"] = pre
                                                 map["menuId"] = IdWorker.getId()
                                                 map["addMenuId"] = IdWorker.getId()
                                                 map["removeMenuId"] = IdWorker.getId()
@@ -178,29 +190,29 @@ object BladeCodeGenerator {
                                             customFile(
                                                 listOf(
                                                     CustomFile.Builder().filePath(
-                                                        "${frontEndPackage}/src/view/${
-                                                            rearEndPackage.split(".").last()
+                                                        "${frontEndPackage}/src/views/${
+                                                            pre
                                                         }/${mou}"
                                                     )
                                                         .templatePath("templates/saber/crud.vue.vm")
-                                                        .formatNameFunction { it.name }
+                                                        .formatNameFunction { it.entityName.lowercase(Locale.getDefault()) }
                                                         .fileName(".vue")
                                                         .enableFileOverride()
                                                         .build(),
                                                     CustomFile.Builder().filePath(
                                                         "${frontEndPackage}/src/api/${
-                                                            rearEndPackage.split(".").last()
+                                                            pre
                                                         }/${mou}"
                                                     )
                                                         .templatePath("templates/saber/api.js.vm")
-                                                        .formatNameFunction { it.name }
+                                                        .formatNameFunction { it.entityName.lowercase(Locale.getDefault()) }
                                                         .enableFileOverride()
                                                         .fileName(".js")
                                                         .build(),
                                                     CustomFile.Builder()
                                                         .filePath("${servicePath}/src/main/java/sql/${mou}")
                                                         .templatePath("templates/sql/menu.sql.vm")
-                                                        .formatNameFunction { it.name }
+                                                        .formatNameFunction { it.entityName.lowercase(Locale.getDefault()) }
                                                         .enableFileOverride()
                                                         .fileName(".sql")
                                                         .build(),
@@ -230,8 +242,19 @@ object BladeCodeGenerator {
                                 }.execute()
                                 pr += p2
                                 mutableSharedFlow.emit(SF.MsgHandler("正在构建", pr))
+                                try {
+                                    servicePath?.let{
+                                        LocalFileSystem.getInstance().findFileByPath(it)?.refresh(true,true)
+                                    }
+                                    serviceApiPath?.let {
+                                        LocalFileSystem.getInstance().findFileByPath(it)?.refresh(true,true)
+                                    }
+                                    frontEndPackage.let {
+                                        LocalFileSystem.getInstance().findFileByPath(it)?.refresh(true,true)
+                                    }
+                                } catch (_: Exception) {
 
-
+                                }
                             }
                         }
                 } catch (e: Exception) {
