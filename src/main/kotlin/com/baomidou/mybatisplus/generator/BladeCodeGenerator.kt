@@ -124,7 +124,12 @@ object BladeCodeGenerator {
                                             }
                                             with(entityBuilder()) {
                                                 addSuperEntityColumns(SUPER_ENTITY_COLUMNS)
-                                                superClass("org.springblade.core.tenant.mp.TenantEntity")
+                                                if (inheritTenant) {
+                                                    superClass("org.springblade.core.tenant.mp.TenantEntity")
+
+                                                } else {
+                                                    superClass("org.springblade.core.mp.base.BaseEntity")
+                                                }
                                                 enableLombok()
                                                 enableFileOverride()
                                             }
@@ -165,7 +170,8 @@ object BladeCodeGenerator {
                                                 it to StringUtils.underlineToCamel(
                                                     it
                                                 )
-                                            }
+                                            },
+                                            "webPre" to if (StringUtils.isBlank(prefix)) "" else "/${prefix}"
 
                                         )
 
@@ -243,14 +249,14 @@ object BladeCodeGenerator {
                                 pr += p2
                                 mutableSharedFlow.emit(SF.MsgHandler("正在构建", pr))
                                 try {
-                                    servicePath?.let{
-                                        LocalFileSystem.getInstance().findFileByPath(it)?.refresh(true,true)
+                                    servicePath?.let {
+                                        LocalFileSystem.getInstance().findFileByPath(it)?.refresh(true, true)
                                     }
                                     serviceApiPath?.let {
-                                        LocalFileSystem.getInstance().findFileByPath(it)?.refresh(true,true)
+                                        LocalFileSystem.getInstance().findFileByPath(it)?.refresh(true, true)
                                     }
                                     frontEndPackage.let {
-                                        LocalFileSystem.getInstance().findFileByPath(it)?.refresh(true,true)
+                                        LocalFileSystem.getInstance().findFileByPath(it)?.refresh(true, true)
                                     }
                                 } catch (_: Exception) {
 

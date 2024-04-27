@@ -74,6 +74,7 @@ inline fun Add(
     var service by remember { mutableStateOf(info.service) }
     var `service-api` by remember { mutableStateOf(info.`service-api`) }
     var mou by remember { mutableStateOf(info.mou) }
+    var prefix by remember { mutableStateOf(info.prefix) }
 
 
     Scaffold(
@@ -259,7 +260,7 @@ inline fun Add(
                                     dataBaseName,
                                     tableName,
                                     menuName,
-                                    inheritTenant, service, `service-api`, mou, info.sort
+                                    inheritTenant, service, `service-api`, mou, info.sort,prefix
                                 )
                             }
                             toMain(null)
@@ -860,7 +861,7 @@ inline fun Add(
                                     onCheckedChange = {
                                         inheritTenant = it
                                     },
-                                    enabled = false,
+                                    enabled = true,
                                     modifier = Modifier.fillMaxWidth(0.3F).height(28.dp),
                                     colors = SwitchDefaults.colors(checkedThumbColor = Color(0xFF3374f0))
                                 )
@@ -927,9 +928,49 @@ inline fun Add(
                         verticalAlignment = Alignment.CenterVertically,
                         modifier = Modifier.fillMaxWidth().weight(1F)
                     ) {
+                        Text(
+                            "web前缀",
+                            fontSize = 13.sp,
+                            textAlign = TextAlign.Start,
+                            fontWeight = W500,
+                            modifier = Modifier.weight(1.3F), color = Color.White
+                        )
+                        Spacer(modifier = Modifier.weight(.1F))
+
+                        //显示选中的文本
+                        BasicTextField(
+                            prefix,
+                            onValueChange = {
+                                prefix = it
+                            },
+                            readOnly = false,
+                            enabled = true,
+                            modifier = Modifier.weight(2F).height(28.dp).clip(RoundedCornerShape(5.dp))
+                                .background(Color(0xFF4C5052)).padding(horizontal = 10.dp)
+                                .hoverable(remember { MutableInteractionSource() }, true)
+                                .pointerHoverIcon(PointerIcon.Text),
+                            textStyle = TextStyle(
+                                color = Color.White,
+                                fontSize = with(LocalDensity.current) {
+                                    14.dp.toSp()
+                                },
+                                textAlign = TextAlign.Start,
+                            ), cursorBrush = SolidColor(Color.White), maxLines = 1,singleLine = true, decorationBox = {
+                                Row(
+                                    horizontalArrangement = Arrangement.Start,
+                                    verticalAlignment = Alignment.CenterVertically,
+                                    modifier = Modifier.fillMaxSize()
+                                ) {
+                                    it()
+                                }
+                            }
+                        )
+
+
                     }
 
                 }
+
             }
 
         }

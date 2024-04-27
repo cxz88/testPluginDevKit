@@ -42,7 +42,8 @@ data class Info(
     var service: String = "",
     var `service-api`: String = "",
     var mou: String = "",
-    var sort: String = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"))
+    var sort: String = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")),
+    var prefix: String = "web"
 )
 
 
