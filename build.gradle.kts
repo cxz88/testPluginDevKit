@@ -27,19 +27,21 @@ repositories {
 
 // Dependencies are managed with Gradle version catalog - read more: https://docs.gradle.org/current/userguide/platforms.html#sub:version-catalog
 dependencies {
-    implementation(compose.desktop.macos_x64)
-    implementation(compose.desktop.macos_arm64)
-    implementation(compose.desktop.windows_x64)
-    implementation(compose.desktop.linux_x64)
-    implementation(compose.desktop.linux_arm64)
 
-    implementation("moe.tlaster:precompose:1.5.10")
-    implementation ("com.baomidou:mybatis-plus-generator:3.5.5")
-    implementation ("com.baomidou:mybatis-plus-extension:3.5.5")
-    implementation ("com.baomidou:mybatis-plus-core:3.5.5")
-    implementation("org.slf4j:slf4j-simple:2.0.11")
-    implementation("com.mysql:mysql-connector-j:8.3.0")
-    implementation("org.apache.velocity:velocity-engine-core:2.3")
+    api(compose.desktop.macos_x64)
+    api(compose.desktop.macos_arm64)
+    api(compose.desktop.windows_x64)
+//    implementation(compose.desktop.linux_x64)
+//    implementation(compose.desktop.linux_arm64)
+    api("moe.tlaster:precompose:1.5.10")
+
+    api ("com.baomidou:mybatis-plus-generator:3.5.5")
+
+    api ("com.baomidou:mybatis-plus-extension:3.5.5")
+    api ("com.baomidou:mybatis-plus-core:3.5.5")
+    api("org.slf4j:slf4j-simple:2.0.11")
+    api("com.mysql:mysql-connector-j:8.3.0")
+    api("org.apache.velocity:velocity-engine-core:2.3")
 
 }
 
@@ -50,6 +52,7 @@ kotlin {
         languageVersion = JavaLanguageVersion.of(17)
         vendor = JvmVendorSpec.JETBRAINS
     }
+
 }
 
 // Configure Gradle IntelliJ Plugin - read more: https://plugins.jetbrains.com/docs/intellij/tools-gradle-intellij-plugin.html
@@ -86,6 +89,7 @@ koverReport {
 }
 
 tasks {
+
     wrapper {
         gradleVersion = properties("gradleVersion").get()
     }
