@@ -9,7 +9,7 @@ import com.github.cxz88.testplugindevkit.tool.SF
 import com.intellij.openapi.module.ModuleManager
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.roots.ModuleRootManager
-import com.intellij.openapi.vfs.VirtualFileManager
+import com.intellij.openapi.vfs.LocalFileSystem
 import kotlinx.coroutines.flow.MutableSharedFlow
 import java.sql.DriverManager
 import java.util.*
@@ -273,7 +273,7 @@ object BladeCodeGenerator {
                     return@re
                 }
                 mutableSharedFlow.emit(SF.MsgHandler("构建成功", 1F))
-                VirtualFileManager.getInstance().syncRefresh();
+                LocalFileSystem.getInstance().refresh(false)
 
 
             }
