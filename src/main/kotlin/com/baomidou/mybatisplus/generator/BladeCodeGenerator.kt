@@ -28,6 +28,17 @@ object BladeCodeGenerator {
             "is_deleted",
             "tenant_id"
         )
+    private val SUPER_ENTITY_COLUMNS_NO_TENANT_ID =
+        listOf(
+            "id",
+            "create_time",
+            "create_user",
+            "create_dept",
+            "update_time",
+            "update_user",
+            "status",
+            "is_deleted",
+        )
 
     suspend fun run(
         mutableSharedFlow: MutableSharedFlow<SF.MsgHandler>,
@@ -107,7 +118,7 @@ object BladeCodeGenerator {
                                                     OutputFile.xml to "${servicePath}/src/main/java/${packageName}/mapper/${mou}",
                                                     OutputFile.mapper to "${servicePath}/src/main/java/${packageName}/mapper/${mou}",
                                                     OutputFile.service to "${servicePath}/src/main/java/${packageName}/service/${mou}",
-                                                    OutputFile.serviceImpl to "${servicePath}/src/main/java/${packageName}/service/Impl/${mou}",
+                                                    OutputFile.serviceImpl to "${servicePath}/src/main/java/${packageName}/service/impl/${mou}",
                                                     OutputFile.controller to "${servicePath}/src/main/java/${packageName}/controller/${mou}",
                                                 )
 
@@ -166,11 +177,18 @@ object BladeCodeGenerator {
                                             }/${mou}",
                                             "serviceName" to service,
                                             "servicePackage" to mou,
-                                            "commonFields" to SUPER_ENTITY_COLUMNS.map {
-                                                it to StringUtils.underlineToCamel(
-                                                    it
-                                                )
-                                            },
+                                            "commonFields" to
+
+                                                    if (inheritTenant) {
+                                                        SUPER_ENTITY_COLUMNS
+                                                    } else {
+                                                        SUPER_ENTITY_COLUMNS_NO_TENANT_ID
+                                                    }
+                                                        .map {
+                                                            it to StringUtils.underlineToCamel(
+                                                                it
+                                                            )
+                                                        },
                                             "webPre" to if (StringUtils.isBlank(prefix)) "" else "/${prefix}"
 
                                         )

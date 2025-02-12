@@ -317,7 +317,7 @@ inline fun Add(
                             },
                             readOnly = false,
                             enabled = true,
-                            modifier = Modifier.weight(2F).height(28.dp).clip(RoundedCornerShape(5.dp))
+                            modifier = Modifier.weight(2F).height(32.dp).clip(RoundedCornerShape(5.dp))
                                 .background(Color(0xFF4C5052)).padding(horizontal = 10.dp)
                                 .hoverable(remember { MutableInteractionSource() }, true)
                                 .pointerHoverIcon(PointerIcon.Text),
@@ -327,7 +327,7 @@ inline fun Add(
                                     14.dp.toSp()
                                 },
                                 textAlign = TextAlign.Start,
-                            ), cursorBrush = SolidColor(Color.White), maxLines = 1, decorationBox = {
+                            ), cursorBrush = SolidColor(Color.White), maxLines = 1, singleLine = true, decorationBox = {
                                 Row(
                                     horizontalArrangement = Arrangement.Start,
                                     verticalAlignment = Alignment.CenterVertically,
@@ -420,7 +420,7 @@ inline fun Add(
                             },
                             readOnly = false,
                             enabled = true,
-                            modifier = Modifier.weight(2F).height(28.dp).clip(RoundedCornerShape(5.dp))
+                            modifier = Modifier.weight(2F).height(32.dp).clip(RoundedCornerShape(5.dp))
                                 .background(Color(0xFF4C5052)).padding(horizontal = 10.dp)
                                 .hoverable(remember { MutableInteractionSource() }, true)
                                 .pointerHoverIcon(PointerIcon.Text),
@@ -464,7 +464,7 @@ inline fun Add(
                             },
                             readOnly = true,
                             enabled = false,
-                            modifier = Modifier.weight(2F).height(28.dp).clip(RoundedCornerShape(5.dp))
+                            modifier = Modifier.weight(2F).height(32.dp).clip(RoundedCornerShape(5.dp))
                                 .background(Color(0xFF4C5052)).padding(horizontal = 10.dp)
                                 .hoverable(remember { MutableInteractionSource() }, true)
                                 .pointerHoverIcon(PointerIcon.Hand),
@@ -525,7 +525,7 @@ inline fun Add(
                             },
                             readOnly = false,
                             enabled = true,
-                            modifier = Modifier.weight(2F).height(28.dp).clip(RoundedCornerShape(5.dp))
+                            modifier = Modifier.weight(2F).height(32.dp).clip(RoundedCornerShape(5.dp))
                                 .background(Color(0xFF4C5052)).padding(horizontal = 10.dp)
                                 .hoverable(remember { MutableInteractionSource() }, true)
                                 .pointerHoverIcon(PointerIcon.Text),
@@ -570,7 +570,7 @@ inline fun Add(
                             },
                             readOnly = false,
                             enabled = true,
-                            modifier = Modifier.weight(2F).height(28.dp).clip(RoundedCornerShape(5.dp))
+                            modifier = Modifier.weight(2F).height(32.dp).clip(RoundedCornerShape(5.dp))
                                 .background(Color(0xFF4C5052)).padding(horizontal = 10.dp)
                                 .hoverable(remember { MutableInteractionSource() }, true)
                                 .pointerHoverIcon(PointerIcon.Text),
@@ -619,7 +619,7 @@ inline fun Add(
                             },
                             readOnly = false,
                             enabled = true,
-                            modifier = Modifier.weight(2F).height(28.dp).clip(RoundedCornerShape(5.dp))
+                            modifier = Modifier.weight(2F).height(32.dp).clip(RoundedCornerShape(5.dp))
                                 .background(Color(0xFF4C5052)).padding(horizontal = 10.dp)
                                 .hoverable(remember { MutableInteractionSource() }, true)
                                 .pointerHoverIcon(PointerIcon.Text),
@@ -663,7 +663,7 @@ inline fun Add(
                             },
                             readOnly = false,
                             enabled = true,
-                            modifier = Modifier.weight(2F).height(28.dp).clip(RoundedCornerShape(5.dp))
+                            modifier = Modifier.weight(2F).height(32.dp).clip(RoundedCornerShape(5.dp))
                                 .background(Color(0xFF4C5052)).padding(horizontal = 10.dp)
                                 .hoverable(remember { MutableInteractionSource() }, true)
                                 .pointerHoverIcon(PointerIcon.Text),
@@ -714,7 +714,7 @@ inline fun Add(
                             },
                             readOnly = false,
                             enabled = true,
-                            modifier = Modifier.weight(2F).height(28.dp).clip(RoundedCornerShape(5.dp))
+                            modifier = Modifier.weight(2F).height(32.dp).clip(RoundedCornerShape(5.dp))
                                 .background(Color(0xFF4C5052)).padding(horizontal = 10.dp)
                                 .hoverable(remember { MutableInteractionSource() }, true)
                                 .pointerHoverIcon(PointerIcon.Text),
@@ -758,7 +758,7 @@ inline fun Add(
                             },
                             readOnly = false,
                             enabled = true,
-                            modifier = Modifier.weight(2F).height(28.dp).clip(RoundedCornerShape(5.dp))
+                            modifier = Modifier.weight(2F).height(32.dp).clip(RoundedCornerShape(5.dp))
                                 .background(Color(0xFF4C5052)).padding(horizontal = 10.dp)
                                 .hoverable(remember { MutableInteractionSource() }, true)
                                 .pointerHoverIcon(PointerIcon.Text),
@@ -810,7 +810,7 @@ inline fun Add(
                             },
                             readOnly = false,
                             enabled = true,
-                            modifier = Modifier.weight(2F).height(28.dp).clip(RoundedCornerShape(5.dp))
+                            modifier = Modifier.weight(2F).height(32.dp).clip(RoundedCornerShape(5.dp))
                                 .background(Color(0xFF4C5052)).padding(horizontal = 10.dp)
                                 .hoverable(remember { MutableInteractionSource() }, true)
                                 .pointerHoverIcon(PointerIcon.Text),
@@ -899,7 +899,7 @@ inline fun Add(
                             },
                             readOnly = false,
                             enabled = true,
-                            modifier = Modifier.weight(2F).height(28.dp).clip(RoundedCornerShape(5.dp))
+                            modifier = Modifier.weight(2F).height(32.dp).clip(RoundedCornerShape(5.dp))
                                 .background(Color(0xFF4C5052)).padding(horizontal = 10.dp)
                                 .hoverable(remember { MutableInteractionSource() }, true)
                                 .pointerHoverIcon(PointerIcon.Text),
@@ -945,7 +945,7 @@ inline fun Add(
                             },
                             readOnly = false,
                             enabled = true,
-                            modifier = Modifier.weight(2F).height(28.dp).clip(RoundedCornerShape(5.dp))
+                            modifier = Modifier.weight(2F).height(32.dp).clip(RoundedCornerShape(5.dp))
                                 .background(Color(0xFF4C5052)).padding(horizontal = 10.dp)
                                 .hoverable(remember { MutableInteractionSource() }, true)
                                 .pointerHoverIcon(PointerIcon.Text),
@@ -997,7 +997,7 @@ class Props(private val project: Project?, private val isService: Boolean, param
         get() = project?.let { p ->
             val instance = ModuleManager.getInstance(p)
             val modules = instance.modules
-            modules.map { it.name }.filter { if (isService) !it.endsWith("api") else it.endsWith("api") }
+            modules.map { it.name }
                 .toList()
         } ?: listOf("")
     var check: String by mutableStateOf(
@@ -1065,7 +1065,7 @@ fun SelectedTextBox(props: Props) {
         readOnly = true,
         maxLines = 1,
         enabled = false,
-        modifier = Modifier.height(28.dp).fillMaxWidth().clip(RoundedCornerShape(5.dp))
+        modifier = Modifier.height(32.dp).fillMaxWidth().clip(RoundedCornerShape(5.dp))
             .background(Color(0xFF4C5052)).hoverable(remember { MutableInteractionSource() }, true)
             .pointerHoverIcon(PointerIcon.Default)
             ,

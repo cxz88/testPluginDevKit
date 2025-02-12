@@ -57,8 +57,8 @@ inline fun App(
                     text = value.name
                     id = key
                 }
-            }.toMutableStateList()
-        } ?: mutableStateListOf())
+            }.toMutableList()
+        } ?: mutableListOf<RowInfo>())
     }
     Surface(modifier = Modifier.fillMaxSize(), color = Color.Transparent) {
         Column {
@@ -259,10 +259,13 @@ inline fun App(
                                             serviceR?.run {
                                                 val info = infoMap[item.id]
                                                 info?.let { ifo ->
-                                                    infoMap[UUID.randomUUID().toString()] = ifo.copy().apply {
-                                                        name += UUID.randomUUID().toString().replace("-", "")
-                                                        sort = LocalDateTime.now()
-                                                            .format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"))
+                                                    try {
+                                                        infoMap[UUID.randomUUID().toString()] = ifo.copy().apply {
+                                                            name += UUID.randomUUID().toString().replace("-", "")
+                                                            sort = LocalDateTime.now()
+                                                                .format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"))
+                                                        }
+                                                    } catch (_: Exception) {
                                                     }
                                                     rowInfo = serviceR.run {
                                                         infoMap.entries.sortedBy {
@@ -275,7 +278,7 @@ inline fun App(
                                                                 text = value.name
                                                                 id = key
                                                             }
-                                                        }.toMutableStateList()
+                                                        }.toMutableList()
                                                     }
 
                                                 }
@@ -313,7 +316,7 @@ inline fun App(
                                                                 text = value.name
                                                                 id = key
                                                             }
-                                                        }.toMutableStateList()
+                                                        }.toMutableList()
                                                 }
 
                                             }
