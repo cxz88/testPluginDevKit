@@ -9,7 +9,7 @@ import com.github.cxz88.testplugindevkit.tool.SF
 import com.intellij.openapi.module.ModuleManager
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.roots.ModuleRootManager
-import com.intellij.openapi.vfs.LocalFileSystem
+import com.intellij.openapi.vfs.VirtualFileManager
 import kotlinx.coroutines.flow.MutableSharedFlow
 import java.sql.DriverManager
 import java.util.*
@@ -266,19 +266,6 @@ object BladeCodeGenerator {
                                 }.execute()
                                 pr += p2
                                 mutableSharedFlow.emit(SF.MsgHandler("正在构建", pr))
-                                try {
-                                    servicePath?.let {
-                                        LocalFileSystem.getInstance().findFileByPath(it)?.refresh(true, true)
-                                    }
-                                    serviceApiPath?.let {
-                                        LocalFileSystem.getInstance().findFileByPath(it)?.refresh(true, true)
-                                    }
-                                    frontEndPackage.let {
-                                        LocalFileSystem.getInstance().findFileByPath(it)?.refresh(true, true)
-                                    }
-                                } catch (_: Exception) {
-
-                                }
                             }
                         }
                 } catch (e: Exception) {
@@ -286,6 +273,7 @@ object BladeCodeGenerator {
                     return@re
                 }
                 mutableSharedFlow.emit(SF.MsgHandler("构建成功", 1F))
+                VirtualFileManager.getInstance().syncRefresh();
 
 
             }
