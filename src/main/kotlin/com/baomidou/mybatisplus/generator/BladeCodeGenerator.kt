@@ -10,6 +10,7 @@ import com.intellij.openapi.module.ModuleManager
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.roots.ModuleRootManager
 import com.intellij.openapi.vfs.LocalFileSystem
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableSharedFlow
 import java.sql.DriverManager
 import java.util.*
@@ -273,8 +274,12 @@ object BladeCodeGenerator {
                     return@re
                 }
                 mutableSharedFlow.emit(SF.MsgHandler("构建成功", 1F))
-                LocalFileSystem.getInstance().refresh(false)
-
+                delay(1000)
+                val projectPath = project.basePath
+                if (projectPath != null) {
+                    val projectDir = LocalFileSystem.getInstance().refreshAndFindFileByPath(projectPath)
+                    projectDir?.refresh(false, true)
+                }
 
             }
 
